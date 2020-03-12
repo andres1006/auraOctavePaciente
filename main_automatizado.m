@@ -1,3 +1,4 @@
+function [] = main_automatizado(Dir)
 ###############################################################################################################
 %%%dataProcess
 %%% Analiza los test de Sacadas, Antisacadas, Sacadas de memoria, Seguimiento Lento y Fijaciones de pacientes con
@@ -15,18 +16,18 @@
 %%% Se ha integrado los parametros de vuelta en las sacadas
 ###############################################################################################################
 
+
 #! /usr/bin/octave -qf
 %includes
 
 version = "2.1.3";
 pkg load statistics;
 
-patologia_a_estudiar = 1;
 %%%%%%%%%%%%%%%%%%%%%%PARAMETRO PARA LA DES/ACTIVACION DE LOS PARAMETROS DE VUELTA
 vuelta=1;   %vuelta = 0 -> Excel sin parametros de vuelta
             %vuelta = 1 -> Excel con parametros de vuelta
 
-Dir=uigetdir('/*');
+%Dir=uigetdir('/*');
 addpath('funs'); 
 patologia=0;
 infoDir=dir(Dir);
@@ -58,29 +59,20 @@ if patologia==1
   fdTSL = fopen (strcat(Dir,"/TSL_v-",version,".csv"), "w"); 
   fdTFIX = fopen (strcat(Dir,"/TFIX_v-",version,".csv"), "w"); 
   
-  %Archivo donde se van a unificar todos los CSV.
-  fdGlobal =  fopen (strcat(Dir,"/GLOBAL_v-",version,".csv"), "w");
-  
-  
   %Headers
   if fdTSV!=-1 
     %Cabeceros horizontales de TSV
     fprintf(fdTSV, 'ID,tsv_lat_h, tsv_lat_sd_h,tsv_gain_h,tsv_gain_sd_h,tsv_vpeak_h,tsv_vpeak_sd_h,tsv_err_pos_h,tsv_err_pos_sd_h,tsv_err_neg_h,tsv_err_neg_sd_h,tsv_blinks_h,tsv_fast_h,'); 
-    fprintf(fdGlobal, 'ID,tsv_lat_h, tsv_lat_sd_h,tsv_gain_h,tsv_gain_sd_h,tsv_vpeak_h,tsv_vpeak_sd_h,tsv_err_pos_h,tsv_err_pos_sd_h,tsv_err_neg_h,tsv_err_neg_sd_h,tsv_blinks_h,tsv_fast_h,'); 
     if vuelta == 1 
       fprintf(fdTSV,'tsv_lat_r_h,tsv_lat_sd_r_h,tsv_vpeak_r_h,tsv_vpeak_std_r_h,');
-      fprintf(fdGlobal,'tsv_lat_r_h,tsv_lat_sd_r_h,tsv_vpeak_r_h,tsv_vpeak_std_r_h,');
     endif 
     
     %Cabeceros verticales de TSV
     fprintf(fdTSV, 'tsv_lat_v,tsv_lat_sd_v,tsv_gain_v,tsv_gain_sd_v,tsv_vpeak_v,tsv_vpeak_sd_v,tsv_err_pos_v,tsv_err_pos_sd_v,tsv_err_neg_v,tsv_err_neg_sd_v,tsv_blinks_v,tsv_fast_v');    
-    fprintf(fdGlobal, 'tsv_lat_v,tsv_lat_sd_v,tsv_gain_v,tsv_gain_sd_v,tsv_vpeak_v,tsv_vpeak_sd_v,tsv_err_pos_v,tsv_err_pos_sd_v,tsv_err_neg_v,tsv_err_neg_sd_v,tsv_blinks_v,tsv_fast_v');    
     if vuelta == 1 
       fprintf(fdTSV, ',tsv_lat_r_v,tsv_lat_sd_r_v,tsv_vpeak_r_v,tsv_vpeak_std_r_v\n');
-      fprintf(fdGlobal, ',tsv_lat_r_v,tsv_lat_sd_r_v,tsv_vpeak_r_v,tsv_vpeak_std_r_v');
     else
       fprintf(fdTSV, '\n');      
-      fprintf(fdGlobal , '');      
     endif
   endif  
   
@@ -88,57 +80,44 @@ if patologia==1
   if fdTSM!=-1
     %Cabeceros horizontales de TSM 
     fprintf(fdTSM, 'ID,tsm_lat_h, tsm_lat_sd_h, tsm_gain_h, tsm_gain_sd_h, tsm_vpeak_h, tsm_vpeak_sd_h, tsm_err_pos_h, tsm_err_pos_sd_h, tsm_err_neg_h, tsm_err_neg_sd_h, tsm_blinks_h, tsm_fast_h, tsm_corr_h, tsm_corr_rate_h,');
-    fprintf(fdGlobal, ',tsm_lat_h, tsm_lat_sd_h, tsm_gain_h, tsm_gain_sd_h, tsm_vpeak_h, tsm_vpeak_sd_h, tsm_err_pos_h, tsm_err_pos_sd_h, tsm_err_neg_h, tsm_err_neg_sd_h, tsm_blinks_h, tsm_fast_h, tsm_corr_h, tsm_corr_rate_h,');
     if vuelta == 1 
       fprintf(fdTSM,'tsm_lat_r_h,tsm_lat_sd_r_h,tsm_vpeak_r_h,tsm_vpeak_std_r_h,');
-      fprintf(fdGlobal,'tsm_lat_r_h,tsm_lat_sd_r_h,tsm_vpeak_r_h,tsm_vpeak_std_r_h,');
     endif
     
     %Cabeceros verticales de TSM
     fprintf(fdTSM, 'tsm_lat_v, tsm_lat_sd_v, tsm_gain_v, tsm_gain_sd_v, tsm_vpeak_v, tsm_vpeak_sd_v, tsm_err_pos_v, tsm_err_pos_sd_v, tsm_err_neg_v, tsm_err_neg_sd_v, tsm_blinks_v, tsm_fast_v, tsm_corr_v, tsm_corr_rate_v'); 
-    fprintf(fdGlobal, 'tsm_lat_v, tsm_lat_sd_v, tsm_gain_v, tsm_gain_sd_v, tsm_vpeak_v, tsm_vpeak_sd_v, tsm_err_pos_v, tsm_err_pos_sd_v, tsm_err_neg_v, tsm_err_neg_sd_v, tsm_blinks_v, tsm_fast_v, tsm_corr_v, tsm_corr_rate_v'); 
     if vuelta == 1 
       fprintf(fdTSM, ',tsm_lat_r_v,tsm_lat_sd_r_v,tsm_vpeak_r_v,tsm_vpeak_std_r_v\n');
-      fprintf(fdGlobal, ',tsm_lat_r_v,tsm_lat_sd_r_v,tsm_vpeak_r_v,tsm_vpeak_std_r_v');
     else
       fprintf(fdTSM, '\n');
-      fprintf(fdGlobal, '');
     endif
   endif  
   
   if fdTAS!=-1
     %Cabeceros horizontales de TAS
     fprintf(fdTAS, 'ID,tas_lat_h, tas_lat_sd_h, tas_lat_ref_h, tas_lat_ref_sd_h, tas_Tref_h, tas_Tref_sd_h, tas_err_pos_h, tas_err_pos_sd_h, tas_err_neg_h,tas_err_neg_sd_h, tas_blinks_h, tas_corr_h, tas_ref_h, tas_err_h, tas_sor_h, tas_fast_h, tas_corr_rate_h, tas_ref_rate_h, tas_errs_rate_h, tas_sor_rate_h, tas_fast_rate_h,');
-    fprintf(fdGlobal, ',tas_lat_h, tas_lat_sd_h, tas_lat_ref_h, tas_lat_ref_sd_h, tas_Tref_h, tas_Tref_sd_h, tas_err_pos_h, tas_err_pos_sd_h, tas_err_neg_h,tas_err_neg_sd_h, tas_blinks_h, tas_corr_h, tas_ref_h, tas_err_h, tas_sor_h, tas_fast_h, tas_corr_rate_h, tas_ref_rate_h, tas_errs_rate_h, tas_sor_rate_h, tas_fast_rate_h,');
     if vuelta == 1 
       fprintf(fdTAS,'tas_lat_r_h,tas_lat_sd_r_h,tas_vpeak_r_h,tas_vpeak_std_r_h,');
-      fprintf(fdGlobal,'tas_lat_r_h,tas_lat_sd_r_h,tas_vpeak_r_h,tas_vpeak_std_r_h,');
     endif
     
     %Cabeceros verticales de TAS
     fprintf(fdTAS, 'tas_lat_v, tas_lat_sd_v, tas_lat_ref_v, tas_lat_ref_sd_v, tas_Tref_v, tas_Tref_sd_v, tas_err_pos_v, tas_err_pos_sd_v, tas_err_neg_v,tas_err_neg_sd_v, tas_blinks_v, tas_corr_v, tas_ref_v, tas_err_v, tas_sor_v, tas_fast_v, tas_corr_rate_v, tas_ref_rate_v, tas_errs_rate_v, tas_sor_rate_v, tas_fast_rate_v');
-    fprintf(fdGlobal, 'tas_lat_v, tas_lat_sd_v, tas_lat_ref_v, tas_lat_ref_sd_v, tas_Tref_v, tas_Tref_sd_v, tas_err_pos_v, tas_err_pos_sd_v, tas_err_neg_v,tas_err_neg_sd_v, tas_blinks_v, tas_corr_v, tas_ref_v, tas_err_v, tas_sor_v, tas_fast_v, tas_corr_rate_v, tas_ref_rate_v, tas_errs_rate_v, tas_sor_rate_v, tas_fast_rate_v');
     if vuelta == 1 
       fprintf(fdTAS, ',tas_lat_r_v,tas_lat_sd_r_v,tas_vpeak_r_v,tas_vpeak_std_r_v\n');
-      fprintf(fdGlobal, ',tas_lat_r_v,tas_lat_sd_r_v,tas_vpeak_r_v,tas_vpeak_std_r_v');
     else
       fprintf(fdTAS, '\n');
-      fprintf(fdGlobal, '');
     endif
   endif  
   if fdTSL!=-1
     %Cabeceros horizontales de TSL
     fprintf(fdTSL, 'ID,tsls_blinks_h, tsls_catchup_h, tsls_backup_h, tsls_swj_h, tsls_pursuitTime_h,  tsls_lat_h, tsls_erroPursuitAndSaccades_h, tsls_errorPursuitOnly_h, tsls_gain_h, tsls_velocityError_h, tsls_blinks_v, tsls_catchup_v, tsls_backup_v, tsls_swj_v, tsls_pursuitTime_v, tsls_lat_v, tsls_erroPursuitAndSaccades_v, tsls_errorPursuitOnly_v, tsls_gain_v, tsls_velocityError_v');
-    fprintf(fdGlobal, ',tsls_blinks_h, tsls_catchup_h, tsls_backup_h, tsls_swj_h, tsls_pursuitTime_h,  tsls_lat_h, tsls_erroPursuitAndSaccades_h, tsls_errorPursuitOnly_h, tsls_gain_h, tsls_velocityError_h, tsls_blinks_v, tsls_catchup_v, tsls_backup_v, tsls_swj_v, tsls_pursuitTime_v, tsls_lat_v, tsls_erroPursuitAndSaccades_v, tsls_errorPursuitOnly_v, tsls_gain_v, tsls_velocityError_v');
     
     %Cabeceros verticales de TSL
     fprintf(fdTSL, ',tsll_blinks_h, tsll_catchup_h, tsll_backup_h, tsll_swj_h, tsll_pursuitTime_h,  tsll_lat_h, tsll_erroPursuitAndSaccades_h, tsll_errorPursuitOnly_h, tsll_gain_h, tsll_velocityError_h, tsll_blinks_v, tsll_catchup_v, tsll_backup_v, tsll_swj_v, tsll_pursuitTime_v, tsll_lat_v, tsll_erroPursuitAndSaccades_v, tsll_errorPursuitOnly_v, tsll_gain_v, tsll_velocityError_v, tsll_blinks_s, tsll_catchup_s, tsll_backup_s, tsll_swj_s, tsll_pursuitTime_s, tsll_lat_s, tsll_erroPursuitAndSaccades_s, tsll_errorPursuitOnly_s, tsll_gain_s, tsll_velocityError_s\n');
-    fprintf(fdGlobal, ',tsll_blinks_h, tsll_catchup_h, tsll_backup_h, tsll_swj_h, tsll_pursuitTime_h,  tsll_lat_h, tsll_erroPursuitAndSaccades_h, tsll_errorPursuitOnly_h, tsll_gain_h, tsll_velocityError_h, tsll_blinks_v, tsll_catchup_v, tsll_backup_v, tsll_swj_v, tsll_pursuitTime_v, tsll_lat_v, tsll_erroPursuitAndSaccades_v, tsll_errorPursuitOnly_v, tsll_gain_v, tsll_velocityError_v, tsll_blinks_s, tsll_catchup_s, tsll_backup_s, tsll_swj_s, tsll_pursuitTime_s, tsll_lat_s, tsll_erroPursuitAndSaccades_s, tsll_errorPursuitOnly_s, tsll_gain_s, tsll_velocityError_s');
   endif
   
   if fdTFIX!=-1
     fprintf(fdTFIX, 'ID, tfix_blinks, tfix_sacadas, tfix_microsacadas, tfix_drift, tfix_swjmono, tfix_swjbi, tfix_distraccion, tfix_bcea, tfix_ox, tfix_oy, tfix_centr_x, tfix_centr_y, tfix_ampl_m, tfix_ampl_m_sd, tfix_vel_m, tfix_vel_m_sd, tfix_vpeak_m, tfix_vpeak_m_sd, tfix_frecuency_m, tfix_ampl_d, tfix_ampl_d_sd, tfix_vel_d, tfix_vel_d_sd, tfix_vpeak_d, tfix_vpeak_d_sd, tfix_ampl_swj, tfix_ampl_swj_sd, tfix_time_swj, tfix_time_swj_sd\n');
-    fprintf(fdGlobal, ', tfix_blinks, tfix_sacadas, tfix_microsacadas, tfix_drift, tfix_swjmono, tfix_swjbi, tfix_distraccion, tfix_bcea, tfix_ox, tfix_oy, tfix_centr_x, tfix_centr_y, tfix_ampl_m, tfix_ampl_m_sd, tfix_vel_m, tfix_vel_m_sd, tfix_vpeak_m, tfix_vpeak_m_sd, tfix_frecuency_m, tfix_ampl_d, tfix_ampl_d_sd, tfix_vel_d, tfix_vel_d_sd, tfix_vpeak_d, tfix_vpeak_d_sd, tfix_ampl_swj, tfix_ampl_swj_sd, tfix_time_swj, tfix_time_swj_sd\n');
   endif
 %    fprintf(fdTOP, 'ID, top_blinks_hl, top_rcoef_hl, top_rcoef_sd_hl, top_rcoeftotal_hl, top_nyangle_hl, top_nyangle_sd_hl, top_spangle_hl, top_spangle_sd_hl, top_nyampl_hl, top_nyampl_sd_hl, top_spampl_hl, top_spampl_sd_hl, top_meanspvel_hl, top_meanspvel_sd_hl, top_meannyvel_hl, top_meannyvel_sd_hl, top_peakmaxrel_hl, top_peakmaxrel_sd_hl, top_peakminrel_hl, top_peakminrel_sd_hl ,');
 %    fprintf(fdTOP, 'top_blinks_hr, top_rcoef_hr, top_rcoef_sd_hr, top_rcoeftotal_hr, top_nyangle_hr, top_nyangle_sd_hr, top_spangle_hr, top_spangle_sd_hr, top_nyampl_hr, top_nyampl_sd_hr, top_spampl_hr, top_spampl_sd_hr, top_meanspvel_hr, top_meanspvel_sd_hr, top_meannyvel_hr, top_meannyvel_sd_hr, top_peakmaxrel_hr, top_peakmaxrel_sd_hr, top_peakminrel_hr, top_peakminrel_sd_hr ,');
@@ -314,92 +293,71 @@ if patologia==1
       if fdTSV!=-1 
         %Datos horizontales TSV
         fprintf(fdTSV, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,',patientName,TSVH(1),TSVH(2),TSVH(3),TSVH(4),TSVH(5),TSVH(6),TSVH(7),TSVH(8),TSVH(9),TSVH(10),TSVH(11),TSVH(12));  
-        fprintf(fdGlobal, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,',patientName,TSVH(1),TSVH(2),TSVH(3),TSVH(4),TSVH(5),TSVH(6),TSVH(7),TSVH(8),TSVH(9),TSVH(10),TSVH(11),TSVH(12));  
         if vuelta == 1 
           fprintf(fdTSV, '%f,%f,%f,%f,',TSVH_V(1),TSVH_V(2),TSVH_V(3),TSVH_V(4));
-          fprintf(fdGlobal, '%f,%f,%f,%f,',TSVH_V(1),TSVH_V(2),TSVH_V(3),TSVH_V(4));
         endif 
         
         %Datos verticales TSV
         fprintf(fdTSV, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d',TSVV(1),TSVV(2),TSVV(3),TSVV(4),TSVV(5),TSVV(6),TSVV(7),TSVV(8),TSVV(9),TSVV(10),TSVV(11),TSVV(12));     
-        fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d',TSVV(1),TSVV(2),TSVV(3),TSVV(4),TSVV(5),TSVV(6),TSVV(7),TSVV(8),TSVV(9),TSVV(10),TSVV(11),TSVV(12));     
         if vuelta == 1 
           fprintf(fdTSV, ',%f,%f,%f,%f\n',TSVV_V(1),TSVV_V(2),TSVV_V(3),TSVV_V(4));
-          fprintf(fdGlobal, ',%f,%f,%f,%f,',TSVV_V(1),TSVV_V(2),TSVV_V(3),TSVV_V(4));
         else
           fprintf(fdTSV, '\n');
-          fprintf(fdGlobal, ',');
         endif
       endif  
       
       if fdTSM!=-1
         %Datos horizontales TSM
         fprintf(fdTSM, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%f,',patientName,TSMH(1),TSMH(2),TSMH(3),TSMH(4),TSMH(5),TSMH(6),TSMH(7),TSMH(8),TSMH(9),TSMH(10),TSMH(11),TSMH(12),TSMH(13),TSMH(14));
-        fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%f,',TSMH(1),TSMH(2),TSMH(3),TSMH(4),TSMH(5),TSMH(6),TSMH(7),TSMH(8),TSMH(9),TSMH(10),TSMH(11),TSMH(12),TSMH(13),TSMH(14));
         if vuelta == 1 
           fprintf(fdTSM, '%f,%f,%f,%f,',TSMH_V(1),TSMH_V(2),TSMH_V(3),TSMH_V(4));
-          fprintf(fdGlobal, '%f,%f,%f,%f,',TSMH_V(1),TSMH_V(2),TSMH_V(3),TSMH_V(4));
         endif 
         
         %Datos verticales TSM
         fprintf(fdTSM, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%f',TSMV(1),TSMV(2),TSMV(3),TSMV(4),TSMV(5),TSMV(6),TSMV(7),TSMV(8),TSMV(9),TSMV(10),TSMV(11),TSMV(12),TSMV(13),TSMV(14));
-        fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%f',TSMV(1),TSMV(2),TSMV(3),TSMV(4),TSMV(5),TSMV(6),TSMV(7),TSMV(8),TSMV(9),TSMV(10),TSMV(11),TSMV(12),TSMV(13),TSMV(14));
         if vuelta == 1 
           fprintf(fdTSM, ',%f,%f,%f,%f\n',TSMV_V(1),TSMV_V(2),TSMV_V(3),TSMV_V(4));
-          fprintf(fdGlobal, ',%f,%f,%f,%f,',TSMV_V(1),TSMV_V(2),TSMV_V(3),TSMV_V(4));
         else
           fprintf(fdTSM, '\n');
-          fprintf(fdGlobal, ',');
         endif
       endif
       
       if fdTAS!=-1
         %Datos horizontales TAS
         fprintf(fdTAS, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f,',patientName,TASVH(12),TASVH(13),TASVH(14),TASVH(15),TASVH(16),TASVH(17),TASVH(18),TASVH(19),TASVH(20),TASVH(21),TASVH(1),TASVH(2),TASVH(3),TASVH(4),TASVH(5),TASVH(6),TASVH(7),TASVH(8),TASVH(9),TASVH(10),TASVH(11));
-        fprintf(fdGlobal, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f,',TASVH(12),TASVH(13),TASVH(14),TASVH(15),TASVH(16),TASVH(17),TASVH(18),TASVH(19),TASVH(20),TASVH(21),TASVH(1),TASVH(2),TASVH(3),TASVH(4),TASVH(5),TASVH(6),TASVH(7),TASVH(8),TASVH(9),TASVH(10),TASVH(11));
         if vuelta == 1 
           fprintf(fdTAS, '%f,%f,%f,%f,',TASVH_V(1),TASVH_V(2),TASVH_V(3),TASVH_V(4));
-          fprintf(fdGlobal, '%f,%f,%f,%f,',TASVH_V(1),TASVH_V(2),TASVH_V(3),TASVH_V(4));
         endif
         
         %Datos verticales TAS
         fprintf(fdTAS, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f',TASVV(12),TASVV(13),TASVV(14),TASVV(15),TASVV(16),TASVV(17),TASVV(18),TASVV(19),TASVV(20),TASVV(21),TASVV(1),TASVV(2),TASVV(3),TASVV(4),TASVV(5),TASVV(6),TASVV(7),TASVV(8),TASVV(9),TASVV(10),TASVV(11));
-        fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f',TASVV(12),TASVV(13),TASVV(14),TASVV(15),TASVV(16),TASVV(17),TASVV(18),TASVV(19),TASVV(20),TASVV(21),TASVV(1),TASVV(2),TASVV(3),TASVV(4),TASVV(5),TASVV(6),TASVV(7),TASVV(8),TASVV(9),TASVV(10),TASVV(11));
         if vuelta == 1 
           fprintf(fdTAS, ',%f,%f,%f,%f\n',TASVV_V(1),TASVV_V(2),TASVV_V(3),TASVV_V(4));
-          fprintf(fdGlobal, ',%f,%f,%f,%f,',TASVV_V(1),TASVV_V(2),TASVV_V(3),TASVV_V(4));
         else
           fprintf(fdTAS, '\n');
-          fprintf(fdGlobal, ',');
         endif
       endif
       
       if fdTSL!=-1
         %Datos horizontales TSLS
         fprintf(fdTSL, '%s,%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',patientName,TSLSH(1), TSLSH(2), TSLSH(3), TSLSH(4), TSLSH(5), TSLSH(6), TSLSH(7), TSLSH(8), TSLSH(9), TSLSH(10));
-        fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',TSLSH(1), TSLSH(2), TSLSH(3), TSLSH(4), TSLSH(5), TSLSH(6), TSLSH(7), TSLSH(8), TSLSH(9), TSLSH(10));
         
         %Datos verticales TSLS
         fprintf(fdTSL, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,', TSLSV(1), TSLSV(2), TSLSV(3), TSLSV(4), TSLSV(5), TSLSV(6), TSLSV(7), TSLSV(8), TSLSV(9), TSLSV(10));
-        fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,', TSLSV(1), TSLSV(2), TSLSV(3), TSLSV(4), TSLSV(5), TSLSV(6), TSLSV(7), TSLSV(8), TSLSV(9), TSLSV(10));
         
         %Datos horizontales TSLL
         fprintf(fdTSL, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',TSLLH(1), TSLLH(2), TSLLH(3), TSLLH(4), TSLLH(5), TSLLH(6), TSLLH(7), TSLLH(8), TSLLH(9), TSLLH(10));
-        fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',TSLLH(1), TSLLH(2), TSLLH(3), TSLLH(4), TSLLH(5), TSLLH(6), TSLLH(7), TSLLH(8), TSLLH(9), TSLLH(10));
         
         %Datos verticales TSLL
         fprintf(fdTSL, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,', TSLLV(1), TSLLV(2), TSLLV(3), TSLLV(4), TSLLV(5), TSLLV(6), TSLLV(7), TSLLV(8), TSLLV(9), TSLLV(10));
-        fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,', TSLLV(1), TSLLV(2), TSLLV(3), TSLLV(4), TSLLV(5), TSLLV(6), TSLLV(7), TSLLV(8), TSLLV(9), TSLLV(10));
         
         %Cabeceros TSLLS
         fprintf(fdTSL, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f\n',TSLLS(1), TSLLS(2), TSLLS(3), TSLLS(4), TSLLS(5), TSLLS(6), TSLLS(7), TSLLS(8), TSLLS(9), TSLLS(10));                                        
-        fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',TSLLS(1), TSLLS(2), TSLLS(3), TSLLS(4), TSLLS(5), TSLLS(6), TSLLS(7), TSLLS(8), TSLLS(9), TSLLS(10));                                        
       endif
       
       if fdTFIX!=-1
       
         fprintf(fdTFIX, '%s,%d,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n',patientName,TFIX(1),TFIX(2),TFIX(3),TFIX(4),TFIX(5),TFIX(6),TFIX(7),TFIX(8),TFIX(9),TFIX(10),TFIX(11),TFIX(12),TFIX(13),TFIX(14),TFIX(15),TFIX(16),TFIX(17),TFIX(18),TFIX(19),TFIX(20),TFIX(21),TFIX(22),TFIX(23),TFIX(24),TFIX(25),TFIX(26),TFIX(27),TFIX(28),TFIX(29));
-        fprintf(fdGlobal, '%d,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n',TFIX(1),TFIX(2),TFIX(3),TFIX(4),TFIX(5),TFIX(6),TFIX(7),TFIX(8),TFIX(9),TFIX(10),TFIX(11),TFIX(12),TFIX(13),TFIX(14),TFIX(15),TFIX(16),TFIX(17),TFIX(18),TFIX(19),TFIX(20),TFIX(21),TFIX(22),TFIX(23),TFIX(24),TFIX(25),TFIX(26),TFIX(27),TFIX(28),TFIX(29));
       endif  
  %        fprintf(fdTOP, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',patientName,TOPTHL(1), TOPTHL(2), TOPTHL(3), TOPTHL(4), TOPTHL(5), TOPTHL(6), TOPTHL(7), TOPTHL(8), TOPTHL(9), TOPTHL(10), TOPTHL(11), TOPTHL(12), TOPTHL(13), TOPTHL(14), TOPTHL(15), TOPTHL(16), TOPTHL(17), TOPTHL(18), TOPTHL(19), TOPTHL(20));
  %        fprintf(fdTOP, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',TOPTHR(1), TOPTHR(2), TOPTHR(3), TOPTHR(4), TOPTHR(5), TOPTHR(6), TOPTHR(7), TOPTHR(8), TOPTHR(9), TOPTHR(10), TOPTHR(11), TOPTHR(12), TOPTHR(13), TOPTHR(14), TOPTHR(15), TOPTHR(16), TOPTHR(17), TOPTHR(18), TOPTHR(19), TOPTHR(20));
@@ -407,11 +365,6 @@ if patologia==1
  %        fprintf(fdTOP, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n',TOPTVU(1), TOPTVU(2), TOPTVU(3), TOPTVU(4), TOPTVU(5), TOPTVU(6), TOPTVU(7), TOPTVU(8), TOPTVU(9), TOPTVU(10), TOPTVU(11), TOPTVU(12), TOPTVU(13), TOPTVU(14), TOPTVU(15), TOPTVU(16), TOPTVU(17), TOPTVU(18), TOPTVU(19), TOPTVU(20));           
     endif
   endfor
-
-    if fdGlobal!=-1
-      fclose(fdGlobal);
-    endif
-  
    if fdTSV!=-1
       fclose(fdTSV);
     endif
@@ -428,91 +381,6 @@ if patologia==1
       fclose(fdTFIX);
     endif
   %    fclose(fdTOP);
-  
-  %Generacion de la tabla de inteligencia artificial.
-  filename = strcat(Dir,"/GLOBAL_v-",version,".csv");
-  [numarr,txtarr,rawarr,limits] = xlsread(filename);
-
-  Datos = numarr(2:end,2:end);
-  Fields = ['tsv_lat_h';'tsv_lat_sd_h';'tsv_gain_h';'tsv_gain_sd_h';'tsv_vpeak_h';'tsv_vpeak_sd_h';'tsv_err_pos_h';'tsv_err_pos_sd_h';'tsv_err_neg_h';'tsv_err_neg_sd_h';'tsv_blinks_h';'tsv_fast_h';'tsv_lat_r_h';'tsv_lat_sd_r_h';'tsv_vpeak_r_h';'tsv_vpeak_std_r_h';'tsv_lat_v';'tsv_lat_sd_v';'tsv_gain_v';'tsv_gain_sd_v';'tsv_vpeak_v';'tsv_vpeak_sd_v';'tsv_err_pos_v';'tsv_err_pos_sd_v';'tsv_err_neg_v';'tsv_err_neg_sd_v';'tsv_blinks_v';'tsv_fast_v';'tsv_lat_r_v';'tsv_lat_sd_r_v';'tsv_vpeak_r_v';'tsv_vpeak_std_r_v';'tsm_lat_h';'tsm_lat_sd_h';'tsm_gain_h';'tsm_gain_sd_h';'tsm_vpeak_h';'tsm_vpeak_sd_h';'tsm_err_pos_h';'tsm_err_pos_sd_h';'tsm_err_neg_h';'tsm_err_neg_sd_h';'tsm_blinks_h';'tsm_fast_h';'tsm_corr_h';'tsm_corr_rate_h';'tsm_lat_r_h';'tsm_lat_sd_r_h';'tsm_vpeak_r_h';'tsm_vpeak_std_r_h';'tsm_lat_v';'tsm_lat_sd_v';'tsm_gain_v';'tsm_gain_sd_v';'tsm_vpeak_v';'tsm_vpeak_sd_v';'tsm_err_pos_v';'tsm_err_pos_sd_v';'tsm_err_neg_v';'tsm_err_neg_sd_v';'tsm_blinks_v';'tsm_fast_v';'tsm_corr_v';'tsm_corr_rate_v';'tsm_lat_r_v';'tsm_lat_sd_r_v';'tsm_vpeak_r_v';'tsm_vpeak_std_r_v';'tas_lat_h';'tas_lat_sd_h';'tas_lat_ref_h';'tas_lat_ref_sd_h';'tas_Tref_h';'tas_Tref_sd_h';'tas_err_pos_h';'tas_err_pos_sd_h';'tas_err_neg_h';'tas_err_neg_sd_h';'tas_blinks_h';'tas_corr_h';'tas_ref_h';'tas_err_h';'tas_sor_h';'tas_fast_h';'tas_corr_rate_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_sor_rate_h';'tas_fast_rate_h';'tas_lat_r_h';'tas_lat_sd_r_h';'tas_vpeak_r_h';'tas_vpeak_std_r_h';'tas_lat_v';'tas_lat_sd_v';'tas_lat_ref_v';'tas_lat_ref_sd_v';'tas_Tref_v';'tas_Tref_sd_v';'tas_err_pos_v';'tas_err_pos_sd_v';'tas_err_neg_v';'tas_err_neg_sd_v';'tas_blinks_v';'tas_corr_v';'tas_ref_v';'tas_err_v';'tas_sor_v';'tas_fast_v';'tas_corr_rate_v';'tas_ref_rate_v';'tas_errs_rate_v';'tas_sor_rate_v';'tas_fast_rate_v';'tas_lat_r_v';'tas_lat_sd_r_v';'tas_vpeak_r_v';'tas_vpeak_std_r_v';'tsls_blinks_h';'tsls_catchup_h';'tsls_backup_h';'tsls_swj_h';'tsls_pursuitTime_h';'tsls_lat_h';'tsls_erroPursuitAndSaccades_h';'tsls_errorPursuitOnly_h';'tsls_gain_h';'tsls_velocityError_h';'tsls_blinks_v';'tsls_catchup_v';'tsls_backup_v';'tsls_swj_v';'tsls_pursuitTime_v';'tsls_lat_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v';'tsls_gain_v';'tsls_velocityError_v';'tsll_blinks_h';'tsll_catchup_h';'tsll_backup_h';'tsll_swj_h';'tsll_pursuitTime_h';'tsll_lat_h';'tsll_erroPursuitAndSaccades_h';'tsll_errorPursuitOnly_h';'tsll_gain_h';'tsll_velocityError_h';'tsll_blinks_v';'tsll_catchup_v';'tsll_backup_v';'tsll_swj_v';'tsll_pursuitTime_v';'tsll_lat_v';'tsll_erroPursuitAndSaccades_v';'tsll_errorPursuitOnly_v';'tsll_gain_v';'tsll_velocityError_v';'tsll_blinks_s';'tsll_catchup_s';'tsll_backup_s';'tsll_swj_s';'tsll_pursuitTime_s';'tsll_lat_s';'tsll_erroPursuitAndSaccades_s';'tsll_errorPursuitOnly_s';'tsll_gain_s';'tsll_velocityError_s';'tfix_blinks';'tfix_sacadas';'tfix_microsacadas';'tfix_drift';'tfix_swjmono';'tfix_swjbi';'tfix_distraccion';'tfix_bcea';'tfix_ox';'tfix_oy';'tfix_centr_x';'tfix_centr_y';'tfix_ampl_m';'tfix_ampl_m_sd';'tfix_vel_m';'tfix_vel_m_sd';'tfix_vpeak_m';'tfix_vpeak_m_sd';'tfix_frecuency_m';'tfix_ampl_d';'tfix_ampl_d_sd';'tfix_vel_d';'tfix_vel_d_sd';'tfix_vpeak_d';'tfix_vpeak_d_sd';'tfix_ampl_swj';'tfix_ampl_swj_sd';'tfix_time_swj';'tfix_time_swj_sd'];
-  NewFields = ['tsv_lat_h';'tsv_lat_sd_h';'tsv_tipo_sacada_h';'tsv_vpeak_h';'tsv_blinks_h';'tsv_fast_h';'tsv_lat_r_h';'tsv_lat_sd_r_h';'tsv_vpeak_r_h';'tsv_lat_v';'tsv_lat_sd_v';'tsv_tipo_sacada_v';'tsv_vpeak_v';'tsv_blinks_v';'tsv_fast_v';'tsv_lat_r_v';'tsv_lat_sd_r_v';'tsv_vpeak_r_v';'tsm_blinks_h';'tsm_corr_h';'tsm_corr_rate_h';'tsm_blinks_v';'tsm_corr_v';'tsm_corr_rate_v';'tas_blinks_h';'tas_corr_h';'tas_ref_h';'tas_entendidas_h';'tas_err_h';'tas_sor_h';'tas_fast_h';'tas_corr_rate_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_sor_rate_h';'tas_fast_rate_h';'tas_blinks_v';'tas_corr_v';'tas_ref_v';'tas_entendidas_v';'tas_err_v';'tas_sor_v';'tas_fast_v';'tas_corr_rate_v';'tas_ref_rate_v';'tas_errs_rate_v';'tas_sor_rate_v';'tas_fast_rate_v';'tsls_blinks_h';'tsls_catchup_h';'tsls_backup_h';'tsls_swj_h';'tsls_pursuitTime_h';'tsls_lat_h';'tsls_erroPursuitAndSaccades_h';'tsls_errorPursuitOnly_h';'tsls_gain_h';'tsls_velocityError_h';'tsls_blinks_v';'tsls_catchup_v';'tsls_backup_v';'tsls_swj_v';'tsls_pursuitTime_v';'tsls_lat_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v';'tsls_gain_v';'tsls_velocityError_v';'tfix_blinks';'tfix_sacadas';'tfix_microsacadas';'tfix_drift';'tfix_swjmono';'tfix_swjbi';'tfix_distraccion';'tfix_bcea';'tfix_ox';'tfix_oy';'tfix_centr_x';'tfix_centr_y'];
-
-  %'tsv_lat_v';'tsv_lat_sd_v';'tsv_gain_v';'tsv_gain_sd_v';'tsv_vpeak_v';'tsv_vpeak_sd_v';'tsv_err_pos_v';'tsv_err_pos_sd_v';'tsv_err_neg_v';'tsv_err_neg_sd_v';'tsv_blinks_v';'tsv_fast_v';
-  %'tsm_lat_h';'tsm_lat_sd_h';'tsm_gain_h';'tsm_gain_sd_h';'tsm_vpeak_h';'tsm_vpeak_sd_h';'tsm_err_pos_h';'tsm_err_pos_sd_h';'tsm_err_neg_h';'tsm_err_neg_sd_h';'tsm_blinks_h';'tsm_fast_h';'tsm_corr_h';'tsm_corr_rate_h';
-  %'tsm_lat_v';'tsm_lat_sd_v';'tsm_gain_v';'tsm_gain_sd_v';'tsm_vpeak_v';'tsm_vpeak_sd_v';'tsm_err_pos_v';'tsm_err_pos_sd_v';'tsm_err_neg_v';'tsm_err_neg_sd_v';'tsm_blinks_v';'tsm_fast_v';'tsm_corr_v';'tsm_corr_rate_v';
-  %'tas_lat_h';'tas_lat_sd_h';'tas_lat_ref_h';'tas_lat_ref_sd_h';'tas_Tref_h';'tas_Tref_sd_h';'tas_err_pos_h';'tas_err_pos_sd_h';'tas_err_neg_h';'tas_err_neg_sd_h';'tas_blinks_h';'tas_corr_h';'tas_ref_h';'tas_err_h';'tas_sor_h';'tas_fast_h';'tas_corr_rate_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_sor_rate_h';'tas_fast_rate_h';
-  %'tas_lat_v';'tas_lat_sd_v';'tas_lat_ref_v';'tas_lat_ref_sd_v';'tas_Tref_v';'tas_Tref_sd_v';'tas_err_pos_v';'tas_err_pos_sd_v';'tas_err_neg_v';'tas_err_neg_sd_v';'tas_blinks_v';'tas_corr_v';'tas_ref_v';'tas_err_v';'tas_sor_v';'tas_fast_v';'tas_corr_rate_v';'tas_ref_rate_v';'tas_errs_rate_v';'tas_sor_rate_v';'tas_fast_rate_v';
-  %'tsls_blinks_h';'tsls_catchup_h';'tsls_backup_h';'tsls_swj_h';'tsls_pursuitTime_h';'tsls_lat_h';'tsls_erroPursuitAndSaccades_h';'tsls_errorPursuitOnly_h';'tsls_gain_h';'tsls_velocityError_h';'tsls_blinks_v';'tsls_catchup_v';'tsls_backup_v';'tsls_swj_v';'tsls_pursuitTime_v';'tsls_lat_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v';'tsls_gain_v';'tsls_velocityError_v';
-  %'tsll_blinks_h';'tsll_catchup_h';'tsll_backup_h';'tsll_swj_h';'tsll_pursuitTime_h';'tsll_lat_h';'tsll_erroPursuitAndSaccades_h';'tsll_errorPursuitOnly_h';'tsll_gain_h';'tsll_velocityError_h';'tsll_blinks_v';'tsll_catchup_v';'tsll_backup_v';'tsll_swj_v';'tsll_pursuitTime_v';'tsll_lat_v';'tsll_erroPursuitAndSaccades_v';'tsll_errorPursuitOnly_v';'tsll_gain_v';'tsll_velocityError_v';
-  %'tsll_blinks_s';'tsll_catchup_s';'tsll_backup_s';'tsll_swj_s';'tsll_pursuitTime_s';'tsll_lat_s';'tsll_erroPursuitAndSaccades_s';'tsll_errorPursuitOnly_s';'tsll_gain_s';'tsll_velocityError_s';
-  %'tfix_blinks';'tfix_sacadas';'tfix_microsacadas';'tfix_drift';'tfix_swjmono';'tfix_swjbi';'tfix_distraccion';'tfix_bcea';'tfix_ox';'tfix_oy';'tfix_centr_x';'tfix_centr_y';'tfix_ampl_m';'tfix_ampl_m_sd';'tfix_vel_m';'tfix_vel_m_sd';'tfix_vpeak_m';'tfix_vpeak_m_sd';'tfix_frecuency_m';'tfix_ampl_d';'tfix_ampl_d_sd';'tfix_vel_d';'tfix_vel_d_sd';'tfix_vpeak_d';'tfix_vpeak_d_sd';'tfix_ampl_swj';'tfix_ampl_swj_sd';'tfix_time_swj';'tfix_time_swj_sd'
-  %'tsv_lat_r_h';'tsv_lat_sd_r_h';'tsv_vpeak_r_h';'tsv_vpeak_std_r_h';
-  %'tsv_lat_r_v';'tsv_lat_sd_r_v';'tsv_vpeak_r_v';'tsv_vpeak_std_r_v';
-  %'tsm_lat_r_h';'tsm_lat_sd_r_h';'tsm_vpeak_r_h';'tsm_vpeak_std_r_h';
-  %'tsm_lat_r_v';'tsm_lat_sd_r_v';'tsm_vpeak_r_v';'tsm_vpeak_std_r_v';
-  %'tas_lat_r_v';'tas_lat_sd_r_v';'tas_vpeak_r_v';'tas_vpeak_std_r_v';
-  %'tas_lat_r_h';'tas_lat_sd_r_h';'tas_vpeak_r_h';'tas_vpeak_std_r_h';
-
-  [nrowD,ncolD]=size(Datos);
-  [nrowNF,~]=size(NewFields);
-  k = 1;
-  NewDatos = -100.*(zeros(nrowD,nrowNF)+1);
-  for j = 1:ncolD
-    if(k<=nrowNF)
-      if(strcmp(Fields(j,:), NewFields(k,:)))
-        NewDatos(:,k)  = Datos(:,j);
-        k = k + 1;
-      elseif(strncmp(Fields(j,:),'tsv_gain_h',10))
-        for i = 1:nrowD
-          if(Datos(i,j)>1)
-            NewDatos(i,k) = 1; % Hipermetrico
-          else
-            NewDatos(i,k) = 2; % Hipometrico
-          endif
-        endfor
-        k = k + 1;
-      elseif(strncmp(Fields(j,:),'tsv_gain_v',10))
-        for i = 1:nrowD
-          if(Datos(i,j)>1)
-            NewDatos(i,k) = 1; % Hipermetrico
-          else
-            NewDatos(i,k) = 2; % Hipometrico
-          endif
-        endfor
-        k = k + 1;
-      endif
-      if(k<=nrowNF)
-        if(strncmp(NewFields(k,:),'tas_entendidas_h',16))
-          NewDatos(:,k) = NewDatos(:,k-1) + NewDatos(:,k-2);
-          k = k + 1;
-        elseif(strncmp(NewFields(k,:),'tas_entendidas_v',16))
-          NewDatos(:,k) = NewDatos(:,k-1) + NewDatos(:,k-2);
-          k = k + 1;
-        endif
-      endif
-    endif
-  endfor
-  
-  % Generar la tabla de datos para la inteligencia artificial para una patología
-  if(patologia_a_estudiar == 1)
-    NewFieldsIA = ['tsm_corr_h';'tsm_corr_rate_h';'tsm_corr_v';'tsm_corr_rate_v';'tas_ref_h';'tas_entendidas_h';'tas_err_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_entendidas_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v'];
-  elseif(patologia_a_estudiar == 2)
-    NewFieldsIA = ['tas_entendidas_h';'tas_entendidas_v'];
-  endif
-  [nrowND,ncolND]=size(NewDatos);
-  [nrowNFIA,~]=size(NewFieldsIA);
-  k = 1;
-  NewDatosIA = -100*(zeros(nrowND,nrowNFIA)+1);
-  for j = 1:ncolND
-    if(k<=nrowNFIA)
-      if(strncmp(NewFields(j,:), NewFieldsIA(k,:),length(NewFieldsIA(k,:))))
-        NewDatosIA(:,k)  = NewDatos(:,j);
-        k = k + 1;
-      endif
-    endif
-  endfor
-  xlswrite('nombre_para_tabla_IA',NewDatosIA);
-  
 else
 
   ##############################################################################
@@ -531,86 +399,65 @@ else
       fdTFIX = fopen (strcat(Dir,'/',infoDir(i).name,"/TFIX_v-",version,".csv"), "w"); 
       %fdTOP = fopen (strcat(directory,"/TOP.csv"), "a");
       
-      %Archivo donde se van a unificar todos los CSV.
-      fdGlobal = fopen (strcat(Dir,'/',infoDir(i).name,"/GLOBAL_v-",version,".csv"), "w"); 
-      
       %Headers
       if fdTSV!=-1       
         %Cabeceros horizontales de TSV
         fprintf(fdTSV, 'ID,tsv_lat_h, tsv_lat_sd_h,tsv_gain_h,tsv_gain_sd_h,tsv_vpeak_h,tsv_vpeak_sd_h,tsv_err_pos_h,tsv_err_pos_sd_h,tsv_err_neg_h,tsv_err_neg_sd_h,tsv_blinks_h,tsv_fast_h,'); 
-        fprintf(fdGlobal, 'ID,tsv_lat_h, tsv_lat_sd_h,tsv_gain_h,tsv_gain_sd_h,tsv_vpeak_h,tsv_vpeak_sd_h,tsv_err_pos_h,tsv_err_pos_sd_h,tsv_err_neg_h,tsv_err_neg_sd_h,tsv_blinks_h,tsv_fast_h,'); 
         if vuelta == 1 
           fprintf(fdTSV,'tsv_lat_r_h,tsv_lat_sd_r_h,tsv_vpeak_r_h,tsv_vpeak_std_r_h,');
-          fprintf(fdGlobal,'tsv_lat_r_h,tsv_lat_sd_r_h,tsv_vpeak_r_h,tsv_vpeak_std_r_h,');
         endif 
         
         %Cabeceros verticales de TSV
         fprintf(fdTSV, 'tsv_lat_v,tsv_lat_sd_v,tsv_gain_v,tsv_gain_sd_v,tsv_vpeak_v,tsv_vpeak_sd_v,tsv_err_pos_v,tsv_err_pos_sd_v,tsv_err_neg_v,tsv_err_neg_sd_v,tsv_blinks_v,tsv_fast_v');    
-        fprintf(fdGlobal, 'tsv_lat_v,tsv_lat_sd_v,tsv_gain_v,tsv_gain_sd_v,tsv_vpeak_v,tsv_vpeak_sd_v,tsv_err_pos_v,tsv_err_pos_sd_v,tsv_err_neg_v,tsv_err_neg_sd_v,tsv_blinks_v,tsv_fast_v');    
         if vuelta == 1 
           fprintf(fdTSV, ',tsv_lat_r_v,tsv_lat_sd_r_v,tsv_vpeak_r_v,tsv_vpeak_std_r_v\n');
-          fprintf(fdGlobal, ',tsv_lat_r_v,tsv_lat_sd_r_v,tsv_vpeak_r_v,tsv_vpeak_std_r_v');
         else
           fprintf(fdTSV, '\n');
-          fprintf(fdGlobal, '');
         endif
       endif
       
       if fdTSM!=-1
         %Cabeceros horizontales de TSM 
         fprintf(fdTSM, 'ID,tsm_lat_h, tsm_lat_sd_h, tsm_gain_h, tsm_gain_sd_h, tsm_vpeak_h, tsm_vpeak_sd_h, tsm_err_pos_h, tsm_err_pos_sd_h, tsm_err_neg_h, tsm_err_neg_sd_h, tsm_blinks_h, tsm_fast_h, tsm_corr_h, tsm_corr_rate_h,');
-        fprintf(fdGlobal, ',tsm_lat_h, tsm_lat_sd_h, tsm_gain_h, tsm_gain_sd_h, tsm_vpeak_h, tsm_vpeak_sd_h, tsm_err_pos_h, tsm_err_pos_sd_h, tsm_err_neg_h, tsm_err_neg_sd_h, tsm_blinks_h, tsm_fast_h, tsm_corr_h, tsm_corr_rate_h,');
         if vuelta == 1 
           fprintf(fdTSM,'tsm_lat_r_h,tsm_lat_sd_r_h,tsm_vpeak_r_h,tsm_vpeak_std_r_h,');
-          fprintf(fdGlobal,'tsm_lat_r_h,tsm_lat_sd_r_h,tsm_vpeak_r_h,tsm_vpeak_std_r_h,');
         endif
         
         %Cabeceros verticales de TSM 
         fprintf(fdTSM, 'tsm_lat_v, tsm_lat_sd_v, tsm_gain_v, tsm_gain_sd_v, tsm_vpeak_v, tsm_vpeak_sd_v, tsm_err_pos_v, tsm_err_pos_sd_v, tsm_err_neg_v, tsm_err_neg_sd_v, tsm_blinks_v, tsm_fast_v, tsm_corr_v, tsm_corr_rate_v'); 
-        fprintf(fdGlobal, 'tsm_lat_v, tsm_lat_sd_v, tsm_gain_v, tsm_gain_sd_v, tsm_vpeak_v, tsm_vpeak_sd_v, tsm_err_pos_v, tsm_err_pos_sd_v, tsm_err_neg_v, tsm_err_neg_sd_v, tsm_blinks_v, tsm_fast_v, tsm_corr_v, tsm_corr_rate_v'); 
         if vuelta == 1 
           fprintf(fdTSM, ',tsm_lat_r_v,tsm_lat_sd_r_v,tsm_vpeak_r_v,tsm_vpeak_std_r_v\n');
-          fprintf(fdGlobal, ',tsm_lat_r_v,tsm_lat_sd_r_v,tsm_vpeak_r_v,tsm_vpeak_std_r_v');
         else
           fprintf(fdTSM, '\n');
-          fprintf(fdGlobal, '');
         endif
       endif  
       
       if fdTAS!=-1
         %Cabeceros horizontales de TAS
         fprintf(fdTAS, 'ID,tas_lat_h, tas_lat_sd_h, tas_lat_ref_h, tas_lat_ref_sd_h, tas_Tref_h, tas_Tref_sd_h, tas_err_pos_h, tas_err_pos_sd_h, tas_err_neg_h,tas_err_neg_sd_h, tas_blinks_h, tas_corr_h, tas_ref_h, tas_err_h, tas_sor_h, tas_fast_h, tas_corr_rate_h, tas_ref_rate_h, tas_errs_rate_h, tas_sor_rate_h, tas_fast_rate_h,');
-        fprintf(fdGlobal, ',tas_lat_h, tas_lat_sd_h, tas_lat_ref_h, tas_lat_ref_sd_h, tas_Tref_h, tas_Tref_sd_h, tas_err_pos_h, tas_err_pos_sd_h, tas_err_neg_h,tas_err_neg_sd_h, tas_blinks_h, tas_corr_h, tas_ref_h, tas_err_h, tas_sor_h, tas_fast_h, tas_corr_rate_h, tas_ref_rate_h, tas_errs_rate_h, tas_sor_rate_h, tas_fast_rate_h,');
         if vuelta == 1 
           fprintf(fdTAS,'tas_lat_r_h,tas_lat_sd_r_h,tas_vpeak_r_h,tas_vpeak_std_r_h,');
-          fprintf(fdGlobal,'tas_lat_r_h,tas_lat_sd_r_h,tas_vpeak_r_h,tas_vpeak_std_r_h,');
         endif
         
         %Cabeceros verticales de TAS
         fprintf(fdTAS, 'tas_lat_v, tas_lat_sd_v, tas_lat_ref_v, tas_lat_ref_sd_v, tas_Tref_v, tas_Tref_sd_v, tas_err_pos_v, tas_err_pos_sd_v, tas_err_neg_v,tas_err_neg_sd_v, tas_blinks_v, tas_corr_v, tas_ref_v, tas_err_v, tas_sor_v, tas_fast_v, tas_corr_rate_v, tas_ref_rate_v, tas_errs_rate_v, tas_sor_rate_v, tas_fast_rate_v');
-        fprintf(fdGlobal, 'tas_lat_v, tas_lat_sd_v, tas_lat_ref_v, tas_lat_ref_sd_v, tas_Tref_v, tas_Tref_sd_v, tas_err_pos_v, tas_err_pos_sd_v, tas_err_neg_v,tas_err_neg_sd_v, tas_blinks_v, tas_corr_v, tas_ref_v, tas_err_v, tas_sor_v, tas_fast_v, tas_corr_rate_v, tas_ref_rate_v, tas_errs_rate_v, tas_sor_rate_v, tas_fast_rate_v');
         if vuelta == 1 
           fprintf(fdTAS, ',tas_lat_r_v,tas_lat_sd_r_v,tas_vpeak_r_v,tas_vpeak_std_r_v\n');
-          fprintf(fdGlobal, ',tas_lat_r_v,tas_lat_sd_r_v,tas_vpeak_r_v,tas_vpeak_std_r_v');
         else
           fprintf(fdTAS, '\n');
-          fprintf(fdGlobal, '');          
         endif
       endif 
       
       if fdTSL!=-1
         %Cabeceros horizontales de TSL
         fprintf(fdTSL, 'ID, tsls_blinks_h, tsls_catchup_h, tsls_backup_h, tsls_swj_h, tsls_pursuitTime_h,  tsls_lat_h, tsls_erroPursuitAndSaccades_h, tsls_errorPursuitOnly_h, tsls_gain_h, tsls_velocityError_h, tsls_blinks_v, tsls_catchup_v, tsls_backup_v, tsls_swj_v, tsls_pursuitTime_v, tsls_lat_v, tsls_erroPursuitAndSaccades_v, tsls_errorPursuitOnly_v, tsls_gain_v, tsls_velocityError_v');
-        fprintf(fdGlobal, ', tsls_blinks_h, tsls_catchup_h, tsls_backup_h, tsls_swj_h, tsls_pursuitTime_h,  tsls_lat_h, tsls_erroPursuitAndSaccades_h, tsls_errorPursuitOnly_h, tsls_gain_h, tsls_velocityError_h, tsls_blinks_v, tsls_catchup_v, tsls_backup_v, tsls_swj_v, tsls_pursuitTime_v, tsls_lat_v, tsls_erroPursuitAndSaccades_v, tsls_errorPursuitOnly_v, tsls_gain_v, tsls_velocityError_v');
         
         %Cabeceros verticales de TSL
         fprintf(fdTSL, ',tsll_blinks_h, tsll_catchup_h, tsll_backup_h, tsll_swj_h, tsll_pursuitTime_h,  tsll_lat_h, tsll_erroPursuitAndSaccades_h, tsll_errorPursuitOnly_h, tsll_gain_h, tsll_velocityError_h, tsll_blinks_v, tsll_catchup_v, tsll_backup_v, tsll_swj_v, tsll_pursuitTime_v, tsll_lat_v, tsll_erroPursuitAndSaccades_v, tsll_errorPursuitOnly_v, tsll_gain_v, tsll_velocityError_v, tsll_blinks_s, tsll_catchup_s, tsll_backup_s, tsll_swj_s, tsll_pursuitTime_s, tsll_lat_s, tsll_erroPursuitAndSaccades_s, tsll_errorPursuitOnly_s, tsll_gain_s, tsll_velocityError_s\n');
-        fprintf(fdGlobal, ',tsll_blinks_h, tsll_catchup_h, tsll_backup_h, tsll_swj_h, tsll_pursuitTime_h,  tsll_lat_h, tsll_erroPursuitAndSaccades_h, tsll_errorPursuitOnly_h, tsll_gain_h, tsll_velocityError_h, tsll_blinks_v, tsll_catchup_v, tsll_backup_v, tsll_swj_v, tsll_pursuitTime_v, tsll_lat_v, tsll_erroPursuitAndSaccades_v, tsll_errorPursuitOnly_v, tsll_gain_v, tsll_velocityError_v, tsll_blinks_s, tsll_catchup_s, tsll_backup_s, tsll_swj_s, tsll_pursuitTime_s, tsll_lat_s, tsll_erroPursuitAndSaccades_s, tsll_errorPursuitOnly_s, tsll_gain_s, tsll_velocityError_s');
       endif
       
       if fdTFIX!=-1
         fprintf(fdTFIX, 'ID, tfix_blinks, tfix_sacadas, tfix_microsacadas, tfix_drift, tfix_swjmono, tfix_swjbi, tfix_distraccion, tfix_bcea, tfix_ox, tfix_oy, tfix_centr_x, tfix_centr_y, tfix_ampl_m, tfix_ampl_m_sd, tfix_vel_m, tfix_vel_m_sd, tfix_vpeak_m, tfix_vpeak_m_sd, tfix_frecuency_m, tfix_ampl_d, tfix_ampl_d_sd, tfix_vel_d, tfix_vel_d_sd, tfix_vpeak_d, tfix_vpeak_d_sd, tfix_ampl_swj, tfix_ampl_swj_sd, tfix_time_swj, tfix_time_swj_sd\n');
-        fprintf(fdGlobal, ', tfix_blinks, tfix_sacadas, tfix_microsacadas, tfix_drift, tfix_swjmono, tfix_swjbi, tfix_distraccion, tfix_bcea, tfix_ox, tfix_oy, tfix_centr_x, tfix_centr_y, tfix_ampl_m, tfix_ampl_m_sd, tfix_vel_m, tfix_vel_m_sd, tfix_vpeak_m, tfix_vpeak_m_sd, tfix_frecuency_m, tfix_ampl_d, tfix_ampl_d_sd, tfix_vel_d, tfix_vel_d_sd, tfix_vpeak_d, tfix_vpeak_d_sd, tfix_ampl_swj, tfix_ampl_swj_sd, tfix_time_swj, tfix_time_swj_sd\n');
       endif
       %    fprintf(fdTOP, 'ID, top_blinks_hl, top_rcoef_hl, top_rcoef_sd_hl, top_rcoeftotal_hl, top_nyangle_hl, top_nyangle_sd_hl, top_spangle_hl, top_spangle_sd_hl, top_nyampl_hl, top_nyampl_sd_hl, top_spampl_hl, top_spampl_sd_hl, top_meanspvel_hl, top_meanspvel_sd_hl, top_meannyvel_hl, top_meannyvel_sd_hl, top_peakmaxrel_hl, top_peakmaxrel_sd_hl, top_peakminrel_hl, top_peakminrel_sd_hl ,');
       %    fprintf(fdTOP, 'top_blinks_hr, top_rcoef_hr, top_rcoef_sd_hr, top_rcoeftotal_hr, top_nyangle_hr, top_nyangle_sd_hr, top_spangle_hr, top_spangle_sd_hr, top_nyampl_hr, top_nyampl_sd_hr, top_spampl_hr, top_spampl_sd_hr, top_meanspvel_hr, top_meanspvel_sd_hr, top_meannyvel_hr, top_meannyvel_sd_hr, top_peakmaxrel_hr, top_peakmaxrel_sd_hr, top_peakminrel_hr, top_peakminrel_sd_hr ,');
@@ -783,91 +630,70 @@ else
         if fdTSV!=-1 
           %Datos horizontales TSV
           fprintf(fdTSV, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,',patientName,TSVH(1),TSVH(2),TSVH(3),TSVH(4),TSVH(5),TSVH(6),TSVH(7),TSVH(8),TSVH(9),TSVH(10),TSVH(11),TSVH(12));  
-          fprintf(fdGlobal, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,',patientName,TSVH(1),TSVH(2),TSVH(3),TSVH(4),TSVH(5),TSVH(6),TSVH(7),TSVH(8),TSVH(9),TSVH(10),TSVH(11),TSVH(12));  
           if vuelta == 1 
             fprintf(fdTSV, '%f,%f,%f,%f,',TSVH_V(1),TSVH_V(2),TSVH_V(3),TSVH_V(4));
-            fprintf(fdGlobal, '%f,%f,%f,%f,',TSVH_V(1),TSVH_V(2),TSVH_V(3),TSVH_V(4));
           endif 
           
           %Datos verticales TSV
           fprintf(fdTSV, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d',TSVV(1),TSVV(2),TSVV(3),TSVV(4),TSVV(5),TSVV(6),TSVV(7),TSVV(8),TSVV(9),TSVV(10),TSVV(11),TSVV(12));     
-          fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d',TSVV(1),TSVV(2),TSVV(3),TSVV(4),TSVV(5),TSVV(6),TSVV(7),TSVV(8),TSVV(9),TSVV(10),TSVV(11),TSVV(12));     
           if vuelta == 1 
             fprintf(fdTSV, ',%f,%f,%f,%f\n',TSVV_V(1),TSVV_V(2),TSVV_V(3),TSVV_V(4));
-            fprintf(fdGlobal, ',%f,%f,%f,%f',TSVV_V(1),TSVV_V(2),TSVV_V(3),TSVV_V(4));
           else
             fprintf(fdTSV, '\n');
-            fprintf(fdGlobal, ',');
           endif
         endif
         
         if fdTSM!=-1
           %Datos horizontales TSM
           fprintf(fdTSM, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%f,',patientName,TSMH(1),TSMH(2),TSMH(3),TSMH(4),TSMH(5),TSMH(6),TSMH(7),TSMH(8),TSMH(9),TSMH(10),TSMH(11),TSMH(12),TSMH(13),TSMH(14));
-          fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%f,',TSMH(1),TSMH(2),TSMH(3),TSMH(4),TSMH(5),TSMH(6),TSMH(7),TSMH(8),TSMH(9),TSMH(10),TSMH(11),TSMH(12),TSMH(13),TSMH(14));
           if vuelta == 1 
             fprintf(fdTSM, '%f,%f,%f,%f,',TSMH_V(1),TSMH_V(2),TSMH_V(3),TSMH_V(4));
-            fprintf(fdGlobal, '%f,%f,%f,%f,',TSMH_V(1),TSMH_V(2),TSMH_V(3),TSMH_V(4));
           endif 
           
           %Datos verticales TSM
           fprintf(fdTSM, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%f',TSMV(1),TSMV(2),TSMV(3),TSMV(4),TSMV(5),TSMV(6),TSMV(7),TSMV(8),TSMV(9),TSMV(10),TSMV(11),TSMV(12),TSMV(13),TSMV(14));
-          fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%f',TSMV(1),TSMV(2),TSMV(3),TSMV(4),TSMV(5),TSMV(6),TSMV(7),TSMV(8),TSMV(9),TSMV(10),TSMV(11),TSMV(12),TSMV(13),TSMV(14));
           if vuelta == 1 
             fprintf(fdTSM, ',%f,%f,%f,%f\n',TSMV_V(1),TSMV_V(2),TSMV_V(3),TSMV_V(4));
-            fprintf(fdGlobal, ',%f,%f,%f,%f,',TSMV_V(1),TSMV_V(2),TSMV_V(3),TSMV_V(4));
           else
             fprintf(fdTSM, '\n');
-            fprintf(fdGlobal, ',');
           endif
         endif
         
         if fdTAS!=-1
           %Datos horizontales TAS
           fprintf(fdTAS, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f,',patientName,TASVH(12),TASVH(13),TASVH(14),TASVH(15),TASVH(16),TASVH(17),TASVH(18),TASVH(19),TASVH(20),TASVH(21),TASVH(1),TASVH(2),TASVH(3),TASVH(4),TASVH(5),TASVH(6),TASVH(7),TASVH(8),TASVH(9),TASVH(10),TASVH(11));
-          fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f,',TASVH(12),TASVH(13),TASVH(14),TASVH(15),TASVH(16),TASVH(17),TASVH(18),TASVH(19),TASVH(20),TASVH(21),TASVH(1),TASVH(2),TASVH(3),TASVH(4),TASVH(5),TASVH(6),TASVH(7),TASVH(8),TASVH(9),TASVH(10),TASVH(11));
           if vuelta == 1 
             fprintf(fdTAS, '%f,%f,%f,%f,',TASVH_V(1),TASVH_V(2),TASVH_V(3),TASVH_V(4));
-            fprintf(fdGlobal, '%f,%f,%f,%f,',TASVH_V(1),TASVH_V(2),TASVH_V(3),TASVH_V(4));
           endif
           
           %Datos verticales TAS
           fprintf(fdTAS, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f',TASVV(12),TASVV(13),TASVV(14),TASVV(15),TASVV(16),TASVV(17),TASVV(18),TASVV(19),TASVV(20),TASVV(21),TASVV(1),TASVV(2),TASVV(3),TASVV(4),TASVV(5),TASVV(6),TASVV(7),TASVV(8),TASVV(9),TASVV(10),TASVV(11));
-          fprintf(fdGlobal, '%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f',TASVV(12),TASVV(13),TASVV(14),TASVV(15),TASVV(16),TASVV(17),TASVV(18),TASVV(19),TASVV(20),TASVV(21),TASVV(1),TASVV(2),TASVV(3),TASVV(4),TASVV(5),TASVV(6),TASVV(7),TASVV(8),TASVV(9),TASVV(10),TASVV(11));
           if vuelta == 1 
             fprintf(fdTAS, ',%f,%f,%f,%f\n',TASVV_V(1),TASVV_V(2),TASVV_V(3),TASVV_V(4));
-            fprintf(fdGlobal, ',%f,%f,%f,%f,',TASVV_V(1),TASVV_V(2),TASVV_V(3),TASVV_V(4));
           else
             fprintf(fdTAS, '\n');
-            fprintf(fdGlobal, ',');
           endif
         endif
         
         if fdTSL!=-1
           %Datos horizontales TSLS
           fprintf(fdTSL, '%s,%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',patientName,TSLSH(1), TSLSH(2), TSLSH(3), TSLSH(4), TSLSH(5), TSLSH(6), TSLSH(7), TSLSH(8), TSLSH(9), TSLSH(10));
-          fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',TSLSH(1), TSLSH(2), TSLSH(3), TSLSH(4), TSLSH(5), TSLSH(6), TSLSH(7), TSLSH(8), TSLSH(9), TSLSH(10));
           
           %Datos verticales TSLS
           fprintf(fdTSL, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,', TSLSV(1), TSLSV(2), TSLSV(3), TSLSV(4), TSLSV(5), TSLSV(6), TSLSV(7), TSLSV(8), TSLSV(9), TSLSV(10));
-          fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,', TSLSV(1), TSLSV(2), TSLSV(3), TSLSV(4), TSLSV(5), TSLSV(6), TSLSV(7), TSLSV(8), TSLSV(9), TSLSV(10));
           
           %Datos horizontales TSLL
           fprintf(fdTSL, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',TSLLH(1), TSLLH(2), TSLLH(3), TSLLH(4), TSLLH(5), TSLLH(6), TSLLH(7), TSLLH(8), TSLLH(9), TSLLH(10));
-          fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',TSLLH(1), TSLLH(2), TSLLH(3), TSLLH(4), TSLLH(5), TSLLH(6), TSLLH(7), TSLLH(8), TSLLH(9), TSLLH(10));
           
           %Datos verticales TSLL
           fprintf(fdTSL, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,', TSLLV(1), TSLLV(2), TSLLV(3), TSLLV(4), TSLLV(5), TSLLV(6), TSLLV(7), TSLLV(8), TSLLV(9), TSLLV(10));
-          fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,', TSLLV(1), TSLLV(2), TSLLV(3), TSLLV(4), TSLLV(5), TSLLV(6), TSLLV(7), TSLLV(8), TSLLV(9), TSLLV(10));
           
           %Datos TSLLS
           fprintf(fdTSL, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f\n',TSLLS(1), TSLLS(2), TSLLS(3), TSLLS(4), TSLLS(5), TSLLS(6), TSLLS(7), TSLLS(8), TSLLS(9), TSLLS(10));                                       
-          fprintf(fdGlobal, '%d,%f,%d,%d,%d,%f,%f,%f,%f,%f,',TSLLS(1), TSLLS(2), TSLLS(3), TSLLS(4), TSLLS(5), TSLLS(6), TSLLS(7), TSLLS(8), TSLLS(9), TSLLS(10));                                       
         endif
         
         if fdTFIX!=-1
           fprintf(fdTFIX, '%s,%d,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n',patientName,TFIX(1),TFIX(2),TFIX(3),TFIX(4),TFIX(5),TFIX(6),TFIX(7),TFIX(8),TFIX(9),TFIX(10),TFIX(11),TFIX(12),TFIX(13),TFIX(14),TFIX(15),TFIX(16),TFIX(17),TFIX(18),TFIX(19),TFIX(20),TFIX(21),TFIX(22),TFIX(23),TFIX(24),TFIX(25),TFIX(26),TFIX(27),TFIX(28),TFIX(29));
-          fprintf(fdGlobal, '%d,%d,%d,%d,%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n',TFIX(1),TFIX(2),TFIX(3),TFIX(4),TFIX(5),TFIX(6),TFIX(7),TFIX(8),TFIX(9),TFIX(10),TFIX(11),TFIX(12),TFIX(13),TFIX(14),TFIX(15),TFIX(16),TFIX(17),TFIX(18),TFIX(19),TFIX(20),TFIX(21),TFIX(22),TFIX(23),TFIX(24),TFIX(25),TFIX(26),TFIX(27),TFIX(28),TFIX(29));
         endif
         
 %            fprintf(fdTOP, '%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,',patientName,TOPTHL(1), TOPTHL(2), TOPTHL(3), TOPTHL(4), TOPTHL(5), TOPTHL(6), TOPTHL(7), TOPTHL(8), TOPTHL(9), TOPTHL(10), TOPTHL(11), TOPTHL(12), TOPTHL(13), TOPTHL(14), TOPTHL(15), TOPTHL(16), TOPTHL(17), TOPTHL(18), TOPTHL(19), TOPTHL(20));
@@ -892,95 +718,8 @@ else
       if fdTFIX!=-1
         fclose(fdTFIX);
       endif
-      if fdGlobal!=-1      
-      fclose(fdGlobal);
-      endif
     %    fclose(fdTOP);
     endif
-    
-    % Generacion de la tabla de datos para la inteligencia artificial
-    filename = strcat(Dir,"/GLOBAL_v-",version,".csv");
-    [numarr,txtarr,rawarr,limits] = xlsread(filename);
-    
-    Datos = numarr(2:end,2:end);
-    Fields = ['tsv_lat_h';'tsv_lat_sd_h';'tsv_gain_h';'tsv_gain_sd_h';'tsv_vpeak_h';'tsv_vpeak_sd_h';'tsv_err_pos_h';'tsv_err_pos_sd_h';'tsv_err_neg_h';'tsv_err_neg_sd_h';'tsv_blinks_h';'tsv_fast_h';'tsv_lat_r_h';'tsv_lat_sd_r_h';'tsv_vpeak_r_h';'tsv_vpeak_std_r_h';'tsv_lat_v';'tsv_lat_sd_v';'tsv_gain_v';'tsv_gain_sd_v';'tsv_vpeak_v';'tsv_vpeak_sd_v';'tsv_err_pos_v';'tsv_err_pos_sd_v';'tsv_err_neg_v';'tsv_err_neg_sd_v';'tsv_blinks_v';'tsv_fast_v';'tsv_lat_r_v';'tsv_lat_sd_r_v';'tsv_vpeak_r_v';'tsv_vpeak_std_r_v';'tsm_lat_h';'tsm_lat_sd_h';'tsm_gain_h';'tsm_gain_sd_h';'tsm_vpeak_h';'tsm_vpeak_sd_h';'tsm_err_pos_h';'tsm_err_pos_sd_h';'tsm_err_neg_h';'tsm_err_neg_sd_h';'tsm_blinks_h';'tsm_fast_h';'tsm_corr_h';'tsm_corr_rate_h';'tsm_lat_r_h';'tsm_lat_sd_r_h';'tsm_vpeak_r_h';'tsm_vpeak_std_r_h';'tsm_lat_v';'tsm_lat_sd_v';'tsm_gain_v';'tsm_gain_sd_v';'tsm_vpeak_v';'tsm_vpeak_sd_v';'tsm_err_pos_v';'tsm_err_pos_sd_v';'tsm_err_neg_v';'tsm_err_neg_sd_v';'tsm_blinks_v';'tsm_fast_v';'tsm_corr_v';'tsm_corr_rate_v';'tsm_lat_r_v';'tsm_lat_sd_r_v';'tsm_vpeak_r_v';'tsm_vpeak_std_r_v';'tas_lat_h';'tas_lat_sd_h';'tas_lat_ref_h';'tas_lat_ref_sd_h';'tas_Tref_h';'tas_Tref_sd_h';'tas_err_pos_h';'tas_err_pos_sd_h';'tas_err_neg_h';'tas_err_neg_sd_h';'tas_blinks_h';'tas_corr_h';'tas_ref_h';'tas_err_h';'tas_sor_h';'tas_fast_h';'tas_corr_rate_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_sor_rate_h';'tas_fast_rate_h';'tas_lat_r_h';'tas_lat_sd_r_h';'tas_vpeak_r_h';'tas_vpeak_std_r_h';'tas_lat_v';'tas_lat_sd_v';'tas_lat_ref_v';'tas_lat_ref_sd_v';'tas_Tref_v';'tas_Tref_sd_v';'tas_err_pos_v';'tas_err_pos_sd_v';'tas_err_neg_v';'tas_err_neg_sd_v';'tas_blinks_v';'tas_corr_v';'tas_ref_v';'tas_err_v';'tas_sor_v';'tas_fast_v';'tas_corr_rate_v';'tas_ref_rate_v';'tas_errs_rate_v';'tas_sor_rate_v';'tas_fast_rate_v';'tas_lat_r_v';'tas_lat_sd_r_v';'tas_vpeak_r_v';'tas_vpeak_std_r_v';'tsls_blinks_h';'tsls_catchup_h';'tsls_backup_h';'tsls_swj_h';'tsls_pursuitTime_h';'tsls_lat_h';'tsls_erroPursuitAndSaccades_h';'tsls_errorPursuitOnly_h';'tsls_gain_h';'tsls_velocityError_h';'tsls_blinks_v';'tsls_catchup_v';'tsls_backup_v';'tsls_swj_v';'tsls_pursuitTime_v';'tsls_lat_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v';'tsls_gain_v';'tsls_velocityError_v';'tsll_blinks_h';'tsll_catchup_h';'tsll_backup_h';'tsll_swj_h';'tsll_pursuitTime_h';'tsll_lat_h';'tsll_erroPursuitAndSaccades_h';'tsll_errorPursuitOnly_h';'tsll_gain_h';'tsll_velocityError_h';'tsll_blinks_v';'tsll_catchup_v';'tsll_backup_v';'tsll_swj_v';'tsll_pursuitTime_v';'tsll_lat_v';'tsll_erroPursuitAndSaccades_v';'tsll_errorPursuitOnly_v';'tsll_gain_v';'tsll_velocityError_v';'tsll_blinks_s';'tsll_catchup_s';'tsll_backup_s';'tsll_swj_s';'tsll_pursuitTime_s';'tsll_lat_s';'tsll_erroPursuitAndSaccades_s';'tsll_errorPursuitOnly_s';'tsll_gain_s';'tsll_velocityError_s';'tfix_blinks';'tfix_sacadas';'tfix_microsacadas';'tfix_drift';'tfix_swjmono';'tfix_swjbi';'tfix_distraccion';'tfix_bcea';'tfix_ox';'tfix_oy';'tfix_centr_x';'tfix_centr_y';'tfix_ampl_m';'tfix_ampl_m_sd';'tfix_vel_m';'tfix_vel_m_sd';'tfix_vpeak_m';'tfix_vpeak_m_sd';'tfix_frecuency_m';'tfix_ampl_d';'tfix_ampl_d_sd';'tfix_vel_d';'tfix_vel_d_sd';'tfix_vpeak_d';'tfix_vpeak_d_sd';'tfix_ampl_swj';'tfix_ampl_swj_sd';'tfix_time_swj';'tfix_time_swj_sd'];
-    NewFields = ['tsv_lat_h';'tsv_lat_sd_h';'tsv_tipo_sacada_h';'tsv_vpeak_h';'tsv_blinks_h';'tsv_fast_h';'tsv_lat_r_h';'tsv_lat_sd_r_h';'tsv_vpeak_r_h';'tsv_lat_v';'tsv_lat_sd_v';'tsv_tipo_sacada_v';'tsv_vpeak_v';'tsv_blinks_v';'tsv_fast_v';'tsv_lat_r_v';'tsv_lat_sd_r_v';'tsv_vpeak_r_v';'tsm_blinks_h';'tsm_corr_h';'tsm_corr_rate_h';'tsm_blinks_v';'tsm_corr_v';'tsm_corr_rate_v';'tas_blinks_h';'tas_corr_h';'tas_ref_h';'tas_entendidas_h';'tas_err_h';'tas_sor_h';'tas_fast_h';'tas_corr_rate_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_sor_rate_h';'tas_fast_rate_h';'tas_blinks_v';'tas_corr_v';'tas_ref_v';'tas_entendidas_v';'tas_err_v';'tas_sor_v';'tas_fast_v';'tas_corr_rate_v';'tas_ref_rate_v';'tas_errs_rate_v';'tas_sor_rate_v';'tas_fast_rate_v';'tsls_blinks_h';'tsls_catchup_h';'tsls_backup_h';'tsls_swj_h';'tsls_pursuitTime_h';'tsls_lat_h';'tsls_erroPursuitAndSaccades_h';'tsls_errorPursuitOnly_h';'tsls_gain_h';'tsls_velocityError_h';'tsls_blinks_v';'tsls_catchup_v';'tsls_backup_v';'tsls_swj_v';'tsls_pursuitTime_v';'tsls_lat_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v';'tsls_gain_v';'tsls_velocityError_v';'tfix_blinks';'tfix_sacadas';'tfix_microsacadas';'tfix_drift';'tfix_swjmono';'tfix_swjbi';'tfix_distraccion';'tfix_bcea';'tfix_ox';'tfix_oy';'tfix_centr_x';'tfix_centr_y'];
-
-    %'tsv_lat_v';'tsv_lat_sd_v';'tsv_gain_v';'tsv_gain_sd_v';'tsv_vpeak_v';'tsv_vpeak_sd_v';'tsv_err_pos_v';'tsv_err_pos_sd_v';'tsv_err_neg_v';'tsv_err_neg_sd_v';'tsv_blinks_v';'tsv_fast_v';
-    %'tsm_lat_h';'tsm_lat_sd_h';'tsm_gain_h';'tsm_gain_sd_h';'tsm_vpeak_h';'tsm_vpeak_sd_h';'tsm_err_pos_h';'tsm_err_pos_sd_h';'tsm_err_neg_h';'tsm_err_neg_sd_h';'tsm_blinks_h';'tsm_fast_h';'tsm_corr_h';'tsm_corr_rate_h';
-    %'tsm_lat_v';'tsm_lat_sd_v';'tsm_gain_v';'tsm_gain_sd_v';'tsm_vpeak_v';'tsm_vpeak_sd_v';'tsm_err_pos_v';'tsm_err_pos_sd_v';'tsm_err_neg_v';'tsm_err_neg_sd_v';'tsm_blinks_v';'tsm_fast_v';'tsm_corr_v';'tsm_corr_rate_v';
-    %'tas_lat_h';'tas_lat_sd_h';'tas_lat_ref_h';'tas_lat_ref_sd_h';'tas_Tref_h';'tas_Tref_sd_h';'tas_err_pos_h';'tas_err_pos_sd_h';'tas_err_neg_h';'tas_err_neg_sd_h';'tas_blinks_h';'tas_corr_h';'tas_ref_h';'tas_err_h';'tas_sor_h';'tas_fast_h';'tas_corr_rate_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_sor_rate_h';'tas_fast_rate_h';
-    %'tas_lat_v';'tas_lat_sd_v';'tas_lat_ref_v';'tas_lat_ref_sd_v';'tas_Tref_v';'tas_Tref_sd_v';'tas_err_pos_v';'tas_err_pos_sd_v';'tas_err_neg_v';'tas_err_neg_sd_v';'tas_blinks_v';'tas_corr_v';'tas_ref_v';'tas_err_v';'tas_sor_v';'tas_fast_v';'tas_corr_rate_v';'tas_ref_rate_v';'tas_errs_rate_v';'tas_sor_rate_v';'tas_fast_rate_v';
-    %'tsls_blinks_h';'tsls_catchup_h';'tsls_backup_h';'tsls_swj_h';'tsls_pursuitTime_h';'tsls_lat_h';'tsls_erroPursuitAndSaccades_h';'tsls_errorPursuitOnly_h';'tsls_gain_h';'tsls_velocityError_h';'tsls_blinks_v';'tsls_catchup_v';'tsls_backup_v';'tsls_swj_v';'tsls_pursuitTime_v';'tsls_lat_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v';'tsls_gain_v';'tsls_velocityError_v';
-    %'tsll_blinks_h';'tsll_catchup_h';'tsll_backup_h';'tsll_swj_h';'tsll_pursuitTime_h';'tsll_lat_h';'tsll_erroPursuitAndSaccades_h';'tsll_errorPursuitOnly_h';'tsll_gain_h';'tsll_velocityError_h';'tsll_blinks_v';'tsll_catchup_v';'tsll_backup_v';'tsll_swj_v';'tsll_pursuitTime_v';'tsll_lat_v';'tsll_erroPursuitAndSaccades_v';'tsll_errorPursuitOnly_v';'tsll_gain_v';'tsll_velocityError_v';
-    %'tsll_blinks_s';'tsll_catchup_s';'tsll_backup_s';'tsll_swj_s';'tsll_pursuitTime_s';'tsll_lat_s';'tsll_erroPursuitAndSaccades_s';'tsll_errorPursuitOnly_s';'tsll_gain_s';'tsll_velocityError_s';
-    %'tfix_blinks';'tfix_sacadas';'tfix_microsacadas';'tfix_drift';'tfix_swjmono';'tfix_swjbi';'tfix_distraccion';'tfix_bcea';'tfix_ox';'tfix_oy';'tfix_centr_x';'tfix_centr_y';'tfix_ampl_m';'tfix_ampl_m_sd';'tfix_vel_m';'tfix_vel_m_sd';'tfix_vpeak_m';'tfix_vpeak_m_sd';'tfix_frecuency_m';'tfix_ampl_d';'tfix_ampl_d_sd';'tfix_vel_d';'tfix_vel_d_sd';'tfix_vpeak_d';'tfix_vpeak_d_sd';'tfix_ampl_swj';'tfix_ampl_swj_sd';'tfix_time_swj';'tfix_time_swj_sd'
-    %'tsv_lat_r_h';'tsv_lat_sd_r_h';'tsv_vpeak_r_h';'tsv_vpeak_std_r_h';
-    %'tsv_lat_r_v';'tsv_lat_sd_r_v';'tsv_vpeak_r_v';'tsv_vpeak_std_r_v';
-    %'tsm_lat_r_h';'tsm_lat_sd_r_h';'tsm_vpeak_r_h';'tsm_vpeak_std_r_h';
-    %'tsm_lat_r_v';'tsm_lat_sd_r_v';'tsm_vpeak_r_v';'tsm_vpeak_std_r_v';
-    %'tas_lat_r_v';'tas_lat_sd_r_v';'tas_vpeak_r_v';'tas_vpeak_std_r_v';
-    %'tas_lat_r_h';'tas_lat_sd_r_h';'tas_vpeak_r_h';'tas_vpeak_std_r_h';
-
-    [nrowD,ncolD]=size(Datos);
-    [nrowNF,~]=size(NewFields);
-    k = 1;
-    NewDatos = -100*(zeros(nrowD,nrowNF)+1);
-    for j = 1:ncolD
-      if(k<=nrowNF)
-        if(strcmp(Fields(j,:), NewFields(k,:)))
-          NewDatos(:,k)  = Datos(:,j);
-          k = k + 1;
-        elseif(strncmp(Fields(j,:),'tsv_gain_h',10))
-          for i = 1:nrowD
-            if(Datos(i,j)>1)
-              NewDatos(i,k) = 1; % Hipermetrico
-            else
-              NewDatos(i,k) = 2; % Hipometrico
-            endif
-          endfor
-          k = k + 1;
-        elseif(strncmp(Fields(j,:),'tsv_gain_v',10))
-          for i = 1:nrowD
-            if(Datos(i,j)>1)
-              NewDatos(i,k) = 1; % Hipermetrico
-            else
-              NewDatos(i,k) = 2; % Hipometrico
-            endif
-          endfor
-          k = k + 1;
-        endif
-        if(k<=nrowNF)
-          if(strncmp(NewFields(k,:),'tas_entendidas_h',16))
-            NewDatos(:,k) = NewDatos(:,k-1) + NewDatos(:,k-2);
-            k = k + 1;
-          elseif(strncmp(NewFields(k,:),'tas_entendidas_v',16))
-            NewDatos(:,k) = NewDatos(:,k-1) + NewDatos(:,k-2);
-            k = k + 1;
-          endif
-        endif
-      endif
-    endfor
-    % Exportar la tabla de datos de IA para cada patología (esta dentro del bucle de patologias)
-    if(patologia_a_estudiar == 1)
-      NewFieldsIA = ['tsm_corr_h';'tsm_corr_rate_h';'tsm_corr_v';'tsm_corr_rate_v';'tas_ref_h';'tas_entendidas_h';'tas_err_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_entendidas_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v'];
-    elseif(patologia_a_estudiar == 2)
-      NewFieldsIA = ['tas_entendidas_h';'tas_entendidas_v'];
-    endif
-    [nrowND,ncolND]=size(NewDatos);
-    [nrowNFIA,~]=size(NewFieldsIA);
-    k = 1;
-    NewDatosIA = -100*(zeros(nrowND,nrowNFIA)+1);
-    for j = 1:ncolND
-      if(k<=nrowNFIA)
-        if(strncmp(NewFields(j,:), NewFieldsIA(k,:),length(NewFieldsIA(k,:))))
-          NewDatosIA(:,k)  = NewDatos(:,j);
-          k = k + 1;
-        endif
-      endif
-    endfor
-    xlswrite('Nombre_para_tabla_IA',NewDatosIA);
-      
   endfor
   
 endif

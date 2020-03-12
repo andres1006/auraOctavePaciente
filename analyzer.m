@@ -23,9 +23,7 @@
 ## Created: 2020-01-15
 
 function [retval] = analyzer (Ruta, patologia_a_estudiar)
-  
-  Ruta = '/home/andresagudelo/Documentos/OCTAVE proyects/PATOLOGIAS/temp/ControlesGrupoB/paciente_grupoB_1';
-  patologia_a_estudiar = [1 2 3 5 9 10];
+  warning('off', 'all');
   
   % La Ruta que se debe especificar coincide con la carpeta de un paciente, es decir el directorio que contiene todas sus pruebas.
   % Las patologias a estudiar son aquellas sobre las que se quiere realizar el informe del paciente.
@@ -455,21 +453,31 @@ function [retval] = analyzer (Ruta, patologia_a_estudiar)
     if(patologia_a_estudiar(i) == 1) % Caso ejemplo
       NewFieldsIA = ['tsm_corr_h';'tsm_corr_rate_h';'tsm_corr_v';'tsm_corr_rate_v';'tas_ref_h';'tas_entendidas_h';'tas_err_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_entendidas_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v'];
       NombreTablaIA = '/Estudio_Ejemplo';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
     elseif(patologia_a_estudiar(i) == 2) % Alzheimer Disease
       NewFieldsIA = ['tsm_corr_h';'tsm_corr_rate_h';'tsm_corr_v';'tsm_corr_rate_v';'tas_ref_h';'tas_entendidas_h';'tas_err_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_entendidas_v';'tsls_erroPursuitAndSaccades_v';'tsls_errorPursuitOnly_v'];
       NombreTablaIA = '/Estudio_AD';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
     elseif(patologia_a_estudiar(i) == 3) % Parkinson Disease
       NewFieldsIA = ['tsm_corr_rate_h';'tsm_corr_rate_v'];
       NombreTablaIA = '/Estudio_PD';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
     elseif(patologia_a_estudiar(i) == 5) % Frontotemporal Dementia
       NewFieldsIA = ['tsm_corr_v'];
       NombreTablaIA = '/Estudio_FTD';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
+    elseif(patologia_a_estudiar(i) == 8) % MHE
+      NewFieldsIA = ['tas_corr_h';'tas_corr_rate_h';'tas_corr_v';'tas_corr_rate_v'];
+      NombreTablaIA = '/Estudio_MHE';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
     elseif(patologia_a_estudiar(i) == 9) % Mild Cognitve Impairment
       NewFieldsIA = ['tsm_corr_h';'tsm_corr_v'];
       NombreTablaIA = '/Estudio_MCI';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
     elseif(patologia_a_estudiar(i) == 10) % Parkinsionisms
       NewFieldsIA = ['tsm_corr_h';'tsm_corr_rate_h';'tsm_corr_v';'tsm_corr_rate_v';'tas_corr_h';'tas_ref_h';'tas_entendidas_h';'tas_err_h';'tas_corr_rate_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_corr_v';'tas_ref_v';'tas_entendidas_v';'tas_err_v';'tas_corr_rate_v';'tas_ref_rate_v';'tas_errs_rate_v'];
       NombreTablaIA = '/Estudio_PKS';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
     else
       NewFieldsIA = '';
       
@@ -480,14 +488,28 @@ function [retval] = analyzer (Ruta, patologia_a_estudiar)
     NewDatosIA = -100*(zeros(nrowND,nrowNFIA)+1);
     for j = 1:ncolND
       if(k<=nrowNFIA)
-        if(strncmp(NewFields(j,:), NewFieldsIA(k,:),length(NewFieldsIA(k,:))))
-          NewDatosIA(:,k)  = NewDatos(:,j);
-          k = k + 1;
+        if(k == nrowNFIA)
+          if(strncmp(NewFields(j,:), NewFieldsIA(k,:),length(NewFieldsIA(k,:))))
+            fprintf(fdIA, '%f',NewDatos(1,j));
+            NewDatosIA(:,k)  = NewDatos(:,j);
+            k = k + 1;
+          endif
+        else
+          if(strncmp(NewFields(j,:), NewFieldsIA(k,:),length(NewFieldsIA(k,:))))
+            fprintf(fdIA, '%f,',NewDatos(1,j));
+            NewDatosIA(:,k)  = NewDatos(:,j);
+            k = k + 1;
+          endif
         endif
       endif
     endfor
-    xlswrite(strcat(Dir,NombreTablaIA),NewDatosIA);
+    % xlswrite(strcat(Dir,NombreTablaIA),NewDatosIA);
     clear NewDatosIA
     clear NombreTablaIA
+    
+    if fdIA!=-1
+      fclose(fdIA);
+    endif
+    clear fdIA
   endfor
 endfunction
