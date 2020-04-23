@@ -23,8 +23,7 @@
 ## Created: 2020-01-15
 
 function [retval] = analyzer (Ruta, patologia_a_estudiar)
-  warning('off', 'all');
-  
+  warning('off','all')
   % La Ruta que se debe especificar coincide con la carpeta de un paciente, es decir el directorio que contiene todas sus pruebas.
   % Las patologias a estudiar son aquellas sobre las que se quiere realizar el informe del paciente.
   addpath('funs');
@@ -34,7 +33,7 @@ function [retval] = analyzer (Ruta, patologia_a_estudiar)
   patientName = strsplit(Dir,'/');
   patientName = char(patientName(1,length(patientName)));
   testsDirInfo = dir(Dir); 
-  version = "2.1.3";
+  version = "2.3.2";
   
   vuelta=1;   %vuelta = 0 -> Excel sin parametros de vuelta
             %vuelta = 1 -> Excel con parametros de vuelta
@@ -478,6 +477,22 @@ function [retval] = analyzer (Ruta, patologia_a_estudiar)
       NewFieldsIA = ['tsm_corr_h';'tsm_corr_rate_h';'tsm_corr_v';'tsm_corr_rate_v';'tas_corr_h';'tas_ref_h';'tas_entendidas_h';'tas_err_h';'tas_corr_rate_h';'tas_ref_rate_h';'tas_errs_rate_h';'tas_corr_v';'tas_ref_v';'tas_entendidas_v';'tas_err_v';'tas_corr_rate_v';'tas_ref_rate_v';'tas_errs_rate_v'];
       NombreTablaIA = '/Estudio_PKS';
       fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
+    elseif(patologia_a_estudiar(i) == 25)
+      NewFieldsIA = ['tsv_vpeak_r_h';'tas_ref_h';'tas_entendidas_h';'tas_ref_v';'tas_entendidas_v';'tsls_swj_h'];
+      NombreTablaIA = '/Estudio_Diferencial_AD_vs_FTD';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
+    elseif(patologia_a_estudiar(i) == 29)
+      NewFieldsIA = ['tas_ref_h';'tas_entendidas_h';'tas_ref_rate_h';'tsls_erroPursuitAndSaccades_v'];
+      NombreTablaIA = '/Estudio_Diferencial_AD_vs_MCI';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
+    elseif(patologia_a_estudiar(i) == 59)
+      NewFieldsIA = ['tsv_vpeak_h';'tsv_lat_sd_r_h';'tsv_vpeak_r_h';'tsm_corr_h';'tsm_corr_rate_h';'tsm_corr_v';'tsm_corr_rate_v';'tfix_ox';'tfix_oy'];
+      NombreTablaIA = '/Estudio_Diferencial_FTD_vs_MCI';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");
+    elseif(patologia_a_estudiar(i) == 310)
+      NewFieldsIA = ['tsv_lat_v';'tsv_vpeak_v';'tas_err_h'];
+      NombreTablaIA = '/Estudio_Diferencial_PD_vs_PKS';
+      fdIA =  fopen (strcat(Dir,NombreTablaIA,".csv"), "w");  
     else
       NewFieldsIA = '';
       
@@ -503,7 +518,7 @@ function [retval] = analyzer (Ruta, patologia_a_estudiar)
         endif
       endif
     endfor
-    % xlswrite(strcat(Dir,NombreTablaIA),NewDatosIA);
+    xlswrite(strcat(Dir,NombreTablaIA),NewDatosIA);
     clear NewDatosIA
     clear NombreTablaIA
     
