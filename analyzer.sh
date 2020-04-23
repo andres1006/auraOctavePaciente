@@ -1,1 +1,1 @@
-analyzer('/home/andresagudelo/Documentos/OCTAVEproyects/PATOLOGIAS/entradas/Hospital1/ControlesGrupoA/paciente_grupoA_1',[1 2 3 5 9 10])
+analyzer('/Users/johnalexandergaleano/Documents/aura/procesos/entrada/01077',[1 2 3 5 9 10])
