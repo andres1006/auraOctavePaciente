@@ -1,1 +1,0 @@
-octave --persist main.m

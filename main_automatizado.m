@@ -1,4 +1,5 @@
 function [] = main_automatizado(Dir)
+   warning('off','all')
 ###############################################################################################################
 %%%dataProcess
 %%% Analiza los test de Sacadas, Antisacadas, Sacadas de memoria, Seguimiento Lento y Fijaciones de pacientes con
