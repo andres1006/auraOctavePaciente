@@ -1,1 +1,1 @@
-main_automatizado('/home/andresagudelo/Documentos/OCTAVEproyects/PATOLOGIAS/entradas/Hospital1/ControlesGrupoD')
+main_automatizado('/Users/johnalexandergaleano/Documents/aura/procesos/entrada')

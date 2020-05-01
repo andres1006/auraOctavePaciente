@@ -19,7 +19,6 @@ function [] = main_automatizado(Dir)
 
 #! /usr/bin/octave -qf
 %includes
-
 version = "2.1.3";
 pkg load statistics;
 
