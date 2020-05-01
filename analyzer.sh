@@ -1,1 +1,1 @@
-analyzer('/home/andresagudelo/Documentos/OCTAVEproyects/PATOLOGIAS/entradas/V012GAAURA',[1 2 3 5 9 10])
+analyzer('/home/andresagudelo/Documentos/OCTAVEproyects/PATOLOGIAS/enProceso/HUCV/patologia_AURA219/paciente_AURA219', [2,3,5,8,9,10,25,29,59,310])

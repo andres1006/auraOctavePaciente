@@ -518,7 +518,7 @@ function [retval] = analyzer (Ruta, patologia_a_estudiar)
         endif
       endif
     endfor
-    xlswrite(strcat(Dir,NombreTablaIA),NewDatosIA);
+    #xlswrite(strcat(Dir,NombreTablaIA),NewDatosIA);
     clear NewDatosIA
     clear NombreTablaIA
     
