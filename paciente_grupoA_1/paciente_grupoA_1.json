@@ -1,0 +1,35 @@
+{
+  "Age": 57,
+  "Analysis_types_for_AI": {
+    "AD vs FTD": true,
+    "AD vs MCI": false,
+    "FTD vs MCI": false,
+    "PD vs PKS": false
+  },
+  "Hospital": "HUCV",
+  "Label": "AlbertoCalvoElipe",
+  "Pathologies_Studied": [
+    2,
+    5
+  ],
+  "Results_types": {
+    "AI": true,
+    "PDF_Report": true,
+    "Zscore": false
+  },
+  "estado": 1,
+  "resultados_IA_EHM": -1,
+  "resultados_IA_demencias": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+  ],
+  "resultados_IA_parkinson": [
+    -1,
+    -1,
+    -1
+  ]
+}
