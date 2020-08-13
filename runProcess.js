@@ -8,7 +8,7 @@ const runCommand = (command) => {
   return new Promise((resolve, reject) => {
     try {
       // creo un comando sh
-      const process = spawn("octave analyzer");
+      const process = spawn("octave analyzer.sh");
       // creo un objeto para guardar la respuesta
       const response = {};
       // ejecutar el comando
