@@ -1,0 +1,30 @@
+syntax = "proto3";
+package octavePackage;
+
+service Octacve {
+  rpc octave(InputOctave) returns (Response);
+}
+
+message Response {
+  string text = 1;
+}
+message InputOctave {
+  Table data = 1;
+  string test = 2;
+}
+
+message Table {
+  repeated float column1 = 1;
+  repeated float column2 = 2;
+  repeated float column3 = 3;
+  repeated float column4 = 4;
+  repeated float column5 = 5;
+  repeated float column6 = 1;
+  repeated float column7 = 2;
+  repeated float column8 = 3;
+  repeated float column9 = 4;
+  repeated float column10 = 5;
+  repeated float column11 = 3;
+  repeated float column12 = 4;
+  repeated float column13 = 5;
+}
