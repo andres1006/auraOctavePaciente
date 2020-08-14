@@ -6,8 +6,7 @@ const octavePackage = grpc.loadPackageDefinition(packageDef).octavePackage;
 const server = new grpc.Server();
 
 const octave = (call, callback) => {
-  console.log(call.request.tests[0].test);
-  console.log(call.request.tests[0].data.table);
+  console.log(call.request);
   callback(null, { text: "Ready" });
 };
 
