@@ -1,7 +1,7 @@
 // llamado child_process
 const { spawn } = require("child_process");
 // closure para obtener y acceder a la funcion runCpmmand
-const starProcess = () => runCommand;
+const startProcess = () => runCommand;
 // Funcion para crear consola y recibir comando a ejecutar
 const runCommand = (command) => {
   // voy a retornar una promesa , funcion para crear el proces
@@ -33,4 +33,4 @@ const runCommand = (command) => {
   });
 };
 // exporto el modulo
-module.exports = starProcess;
+module.exports = startProcess;
