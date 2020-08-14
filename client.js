@@ -50,4 +50,6 @@ const tests = [
   },
 ];
 
-client.octave({ tests }, callback);
+const studies = [2, 5];
+
+client.octave({ tests, studies }, callback);
