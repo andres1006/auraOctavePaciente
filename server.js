@@ -1,6 +1,7 @@
 const fs = require('fs');
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
+const { execSync } = require("child_process");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 const packageDef = protoLoader.loadSync("octave.proto");
@@ -66,6 +67,8 @@ const octave = async (call, callback) => {
   });
 
   fs.writeFileSync('analyzer.sh', `analyzer('./patientfolder',[${studies}])`);
+
+  execSync("octave analyzer.sh");
 
   callback(null, { text: "Ready" });
 };
