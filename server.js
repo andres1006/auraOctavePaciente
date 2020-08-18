@@ -25,19 +25,19 @@ const octave = async (call, callback) => {
     const csvWriter = createCsvWriter({
       path: `./patientfolder/${test}/${test}.csv`,
       header: [
-        { id: 'dato01', title: 'DATO01' },
-        { id: 'dato02', title: 'DATO02' },
-        { id: 'dato03', title: 'DATO03' },
-        { id: 'dato04', title: 'DATO04' },
-        { id: 'dato05', title: 'DATO05' },
-        { id: 'dato06', title: 'DATO06' },
-        { id: 'dato07', title: 'DATO07' },
-        { id: 'dato08', title: 'DATO08' },
-        { id: 'dato09', title: 'DATO09' },
-        { id: 'dato10', title: 'DATO10' },
-        { id: 'dato11', title: 'DATO11' },
-        { id: 'dato12', title: 'DATO12' },
-        { id: 'dato13', title: 'DATO13' }
+        { id: 'dato01', title: 'Time(ms)' },
+        { id: 'dato02', title: 'GazeX(deg)' },
+        { id: 'dato03', title: 'GazeY(deg)' },
+        { id: 'dato04', title: 'StimulusX(deg)' },
+        { id: 'dato05', title: 'StimulusY(deg)' },
+        { id: 'dato06', title: 'GazeVelX(deg/s)' },
+        { id: 'dato07', title: 'GazeVelY(deg/s)' },
+        { id: 'dato08', title: 'ErrorX(deg)' },
+        { id: 'dato09', title: 'ErrorY(deg)' },
+        { id: 'dato10', title: 'PupilArea(px^2)' },
+        { id: 'dato11', title: 'GazeRawX(deg)' },
+        { id: 'dato12', title: 'GazeRawY(deg)' },
+        { id: 'dato13', title: 'Blinks' }
       ]
     });
 
