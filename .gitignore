@@ -1,3 +1,5 @@
 node_modules
+patientfolder
 package-lock.json
 yarn.lock
+analyzer.sh
