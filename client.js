@@ -1,3 +1,5 @@
+const csv = require('csv-parser');
+const fs = require('fs');
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
 
@@ -17,69 +19,74 @@ const callback = (err, response) => {
   }
 };
 
-const tests = [
-  {
-    test: "TSVH",
-    data: {
-      table: [
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.45] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.35] },
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.34] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.23] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.34] },
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.34] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.23] },
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.34] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.23] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.56] },
-      ],
-    },
-  },
-  {
-    test: "TASVH",
-    data: {
-      table: [
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.2] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.5] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.8] },
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.34] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.23] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.34] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.23] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.34] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.23] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.23] },
-      ],
-    },
-  },
-  {
-    test: "TSMH",
-    data: {
-      table: [
-        { column: [5245.2, 45.124, 234.23, 43.5, 41.34] },
-        { column: [2525.3, 5435.4, 2462.2, 42.4, 11.23] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-        { column: [5342.3, 43.674, 264.56, 23.4, 23.65] },
-      ],
-    },
-  },
-];
+const parseCsv = async (file) => {
+  const table = []
+  const readData = () => new Promise((resolve, reject) => {
+    fs.createReadStream(file)
+      .pipe(csv())
+      .on("data", row => table.push(row))
+      .on("error", reject)
+      .on("end", async () => {
+        resolve();
+      });
+  });
+  await readData();
+  return table
+};
 
-const studies = [2, 5];
 
-client.octave({ tests, studies }, callback);
+async function main() {
+  const testsTitles = [];
+  await fs.readdir('./patienttoread', async (_err, files) => {
+    const allPromises = files.map(async (file) => {
+      if (file.search('\\.csv') != -1) {
+        const test = file.slice(0, file.indexOf('.csv'));
+        testsTitles.push(test);
+        return parseCsv(`./patienttoread/${file}`);
+      }
+    });
+    const table = await Promise.all(allPromises);
+
+    const tests = testsTitles.map((nameSerie, index) => {
+      
+      const time = [],
+            gazex = [],
+            gazey = [],
+            stimulux = [],
+            stimuluy = [],
+            gazevelX = [],
+            gazevely = [],
+            errorx = [],
+            errory = [],
+            pupilArea = [],
+            gazerawx = [],
+            gazerawy = [],
+            blinks = [];
+      
+      for (let i = 0; i < table[index].length; i++) {
+        const testData = table[index][i];
+        time.push(testData.Time);
+        gazex.push(testData.GazeX);
+        gazey.push(testData.GazeY);
+        stimulux.push(testData.StimulusX);
+        stimuluy.push(testData.StimulusY);
+        gazevelX.push(testData.GazeVelX);
+        gazevely.push(testData.GazeVelY);
+        errorx.push(testData.ErrorX);
+        errory.push(testData.ErrorY);
+        pupilArea.push(testData.PupilArea);
+        gazerawx.push(testData.GazeRawX);
+        gazerawy.push(testData.GazeRawY);
+        blinks.push(testData.Blinks);
+      }
+        
+      const data = { time, gazex, gazey, stimulux, stimuluy, gazevelX, gazevely, errorx, errory, pupilArea, gazerawx, gazerawy, blinks }
+      const objReturn = { nameSerie, data }
+      return objReturn;
+    });
+    const studies = [2, 5];
+    client.octave({ idStudy: "id_mongo", studies, series: [{ identifierStudyCatalog: '3', tests }] }, callback);
+  });
+}
+
+main();

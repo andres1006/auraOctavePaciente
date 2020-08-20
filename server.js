@@ -1,76 +1,101 @@
 const fs = require('fs');
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
-const { execSync } = require("child_process");
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const { createObjectCsvWriter } = require('csv-writer');
+const { exec } = require('child-process-async');
 
 const packageDef = protoLoader.loadSync("octave.proto");
 const octavePackage = grpc.loadPackageDefinition(packageDef).octavePackage;
 const server = new grpc.Server();
 
 const octave = async (call, callback) => {
-  const { tests } = call.request;
-  const { studies } = call.request;
+  const { tests } = call.request.series[0];
+  const { idStudy, studies } = call.request;
 
   tests.forEach(async (testInfo) => {
-    const { test } = testInfo;
-    const { table } = testInfo.data;
+    const { nameSerie, data } = testInfo;
 
-    const dir = `./patientfolder/${test}`;
+    const dir = `./patientfolder/${nameSerie}_v-2.3.2`;
 
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    const csvWriter = createCsvWriter({
-      path: `./patientfolder/${test}/${test}.csv`,
+    const csvWriter = createObjectCsvWriter({
+      path: `./patientfolder/${nameSerie}_v-2.3.2/${nameSerie}_v-2.3.2.csv`,
       header: [
-        { id: 'dato01', title: 'Time(ms)' },
-        { id: 'dato02', title: 'GazeX(deg)' },
-        { id: 'dato03', title: 'GazeY(deg)' },
-        { id: 'dato04', title: 'StimulusX(deg)' },
-        { id: 'dato05', title: 'StimulusY(deg)' },
-        { id: 'dato06', title: 'GazeVelX(deg/s)' },
-        { id: 'dato07', title: 'GazeVelY(deg/s)' },
-        { id: 'dato08', title: 'ErrorX(deg)' },
-        { id: 'dato09', title: 'ErrorY(deg)' },
-        { id: 'dato10', title: 'PupilArea(px^2)' },
-        { id: 'dato11', title: 'GazeRawX(deg)' },
-        { id: 'dato12', title: 'GazeRawY(deg)' },
-        { id: 'dato13', title: 'Blinks' }
+        { id: 'time', title: 'Time(ms)' },
+        { id: 'gazex', title: 'GazeX(deg)' },
+        { id: 'gazey', title: 'GazeY(deg)' },
+        { id: 'stimulux', title: 'StimulusX(deg)' },
+        { id: 'stimuluy', title: 'StimulusY(deg)' },
+        { id: 'gazevelX', title: 'GazeVelX(deg/s)' },
+        { id: 'gazevely', title: 'GazeVelY(deg/s)' },
+        { id: 'errorx', title: 'ErrorX(deg)' },
+        { id: 'errory', title: 'ErrorY(deg)' },
+        { id: 'pupilArea', title: 'PupilArea(px^2)' },
+        { id: 'gazerawx', title: 'GazeRawX(deg)' },
+        { id: 'gazerawy', title: 'GazeRawY(deg)' },
+        { id: 'blinks', title: 'Blinks' }
       ]
     });
 
-    const firstColumn = table[0].column;
-
-    const records = firstColumn.map((element, index) => {
-      const objReturn = {
-        dato01: element,
-        dato02: table[1].column[index],
-        dato03: table[2].column[index],
-        dato04: table[3].column[index],
-        dato05: table[4].column[index],
-        dato06: table[5].column[index],
-        dato07: table[6].column[index],
-        dato08: table[7].column[index],
-        dato09: table[8].column[index],
-        dato10: table[0].column[index],
-        dato11: table[10].column[index],
-        dato12: table[11].column[index],
-        dato13: table[12].column[index],
-      };
-      return objReturn;
-    });
-
-    await csvWriter.writeRecords(records);
-
+    const dataToSave = [];
+    for (let i = 0; i < data.time.length; i++) {
+      const time = data.time[i];
+      const gazex = data.gazex[i];
+      const gazey = data.gazey[i];
+      const stimulux = data.stimulux[i];
+      const stimuluy = data.stimuluy[i];
+      const gazevelX = data.gazevelX[i];
+      const gazevely = data.gazevely[i];
+      const errorx = data.errorx[i];
+      const errory = data.errory[i];
+      const pupilArea = data.pupilArea[i];
+      const gazerawx = data.gazerawx[i];
+      const gazerawy = data.gazerawy[i];
+      const blinks = data.blinks[i];
+      dataToSave.push({ time, gazex, gazey, stimulux, stimuluy, gazevelX, gazevely, errorx, errory, pupilArea, gazerawx, gazerawy, blinks });
+    }
+    await csvWriter.writeRecords(dataToSave);
   });
 
   fs.writeFileSync('analyzer.sh', `analyzer('./patientfolder',[${studies}])`);
 
-  execSync("octave analyzer.sh");
+  await exec('octave analyzer.sh');
 
-  callback(null, { text: "Ready" });
+  const files = fs.readdirSync('./patientfolder');
+  const results = files.map((file) => {
+    if (file.search('Estudio') != -1) {
+      let idResultType;
+      const resultFile = fs.readFileSync(`./patientfolder/${file}`, 'utf-8');
+      const result = resultFile.split(",").join(" ")
+      const typeStudy = file.slice(file.indexOf('_') + 1, file.indexOf('.csv'))
+      switch (typeStudy) {
+        case 'AD':
+          idResultType = '2'
+          break;
+        case 'PD':
+          idResultType = '3'
+          break;
+        case 'FTD':
+          idResultType = '5'
+          break;
+        case 'MCI':
+          idResultType = '8'
+          break;
+        case 'P':
+          idResultType = '9'
+          break;
+        case 'EHM':
+          idResultType = '10'
+          break;
+      }
+      return { idResultType, result }
+    }
+  }).filter((element) => element !== undefined
+  );
+  callback(null, { idStudy, results });
 };
 
 server.addService(octavePackage.Octave.service, { octave });

@@ -2,27 +2,47 @@ syntax = "proto3";
 package octavePackage;
 
 service Octave {
-  rpc octave(InputOctave) returns (Response);
-}
-
-message Response {
-  string text = 1;
+  rpc octave(InputOctave) returns (OutputOctave);
 }
 
 message InputOctave {
-  repeated Test tests = 1;
-  repeated int32 studies = 2;
+  string idStudy = 1;
+  repeated Series series = 2;
+  repeated int32 studies = 3;
+}
+
+message Series {
+  string identifierStudyCatalog = 1;
+  repeated Test tests = 2;
 }
 
 message Test {
-  Table data = 1;
-  string test = 2;
+  string nameSerie = 1;
+  Columns data = 2;
 }
 
-message Table {
-  repeated Column table = 1;
+message Columns {
+  repeated double time = 1;
+  repeated double gazex = 2;
+  repeated double gazey = 3;
+  repeated double stimulux = 4; 
+  repeated double stimuluy = 5;
+  repeated double gazevelX = 6;
+  repeated double gazevely = 7;
+  repeated double errorx = 8;
+  repeated double errory = 9;
+  repeated double pupilArea = 10; 
+  repeated double gazerawx = 11;
+  repeated double gazerawy = 12;
+  repeated double blinks = 13;
 }
 
-message Column {
-  repeated double column = 1;
+message OutputOctave {
+  string idStudy =1;
+  repeated Result results = 2;
+}
+
+message Result {
+  string result = 1;
+  string idResultType =2;//pendiente de validar
 }
