@@ -8,7 +8,6 @@ service Octave {
 message InputOctave {
   string idStudy = 1;
   repeated Series series = 2;
-  repeated int32 studies = 3;
 }
 
 message Series {
@@ -32,8 +31,8 @@ message Columns {
   repeated double errorx = 8;
   repeated double errory = 9;
   repeated double pupilArea = 10; 
-  repeated double gazerawx = 11;
-  repeated double gazerawy = 12;
+  repeated double gazeRawx = 11;
+  repeated double gazeRawy = 12;
   repeated double blinks = 13;
 }
 
@@ -44,5 +43,5 @@ message OutputOctave {
 
 message Result {
   string result = 1;
-  string idResultType =2;//pendiente de validar
+  string idResultType =2;
 }

@@ -10,14 +10,26 @@ const server = new grpc.Server();
 
 const octave = async (call, callback) => {
   try {
-    const { tests } = call.request.series[0];
-    const { idStudy, studies } = call.request;
+    const { idStudy } = call.request;
+    let tests=[];
+    let identifierStudyCatalog=[];
+    console.log(call.request.series[0].tests[0].data.time[0]);
+    const series =  call.request.series;
+    series.forEach(serie => {
+      serie.tests.forEach(test =>{
+        tests.push(test);
+      })
+      identifierStudyCatalog.push(serie.identifierStudyCatalog);
+    })
+    console.log(tests.length);
+  
 
+    let file = 0;
     tests.forEach(async (testInfo) => {
+      file++;
       const { nameSerie, data } = testInfo;
-
       const dir = `./patientfolder/${nameSerie}_v-2.3.2`;
-
+      console.log("nameSerie = ", nameSerie);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
@@ -53,15 +65,16 @@ const octave = async (call, callback) => {
         const errorx = data.errorx[i];
         const errory = data.errory[i];
         const pupilArea = data.pupilArea[i];
-        const gazerawx = data.gazerawx[i];
-        const gazerawy = data.gazerawy[i];
+        const gazerawx = data.gazeRawx[i];
+        const gazerawy = data.gazeRawy[i];
         const blinks = data.blinks[i];
         dataToSave.push({ time, gazex, gazey, stimulux, stimuluy, gazevelX, gazevely, errorx, errory, pupilArea, gazerawx, gazerawy, blinks });
       }
       await csvWriter.writeRecords(dataToSave);
     });
 
-    fs.writeFileSync('analyzer.sh', `analyzer('./patientfolder',[${studies}])`);
+
+    fs.writeFileSync('analyzer.sh', `analyzer('./patientfolder',[${identifierStudyCatalog}])`);
 
     await exec('octave analyzer.sh');
 
@@ -97,7 +110,7 @@ const octave = async (call, callback) => {
     }).filter((element) => element !== undefined
     );
 
-    fs.rmdirSync('./patientfolder', { recursive: true });
+    //fs.rmdirSync('./patientfolder', { recursive: true });
 
     callback(null, { idStudy, results });
 
@@ -110,5 +123,5 @@ const octave = async (call, callback) => {
 };
 
 server.addService(octavePackage.Octave.service, { octave });
-server.bind("0.0.0.0:50051", grpc.ServerCredentials.createInsecure());
+server.bind("0.0.0.0:5001", grpc.ServerCredentials.createInsecure());
 server.start();
