@@ -47,11 +47,14 @@ const octave = async (call, callback) => {
           { id: 'errorx', title: 'ErrorX(deg)' },
           { id: 'errory', title: 'ErrorY(deg)' },
           { id: 'pupilArea', title: 'PupilArea(px^2)' },
-          { id: 'gazerawx', title: 'GazeRawX(deg)' },
-          { id: 'gazerawy', title: 'GazeRawY(deg)' },
+          { id: 'gazeRawx', title: 'GazeRawX(deg)' },
+          { id: 'gazeRawy', title: 'GazeRawY(deg)' },
           { id: 'blinks', title: 'Blinks' }
         ]
       });
+
+
+      
 
       const dataToSave = [];
       for (let i = 0; i < data.time.length; i++) {
@@ -65,10 +68,10 @@ const octave = async (call, callback) => {
         const errorx = data.errorx[i];
         const errory = data.errory[i];
         const pupilArea = data.pupilArea[i];
-        const gazerawx = data.gazeRawx[i];
-        const gazerawy = data.gazeRawy[i];
+        const gazeRawx = data.gazeRawx[i];
+        const gazeRawy = data.gazeRawy[i];
         const blinks = data.blinks[i];
-        dataToSave.push({ time, gazex, gazey, stimulux, stimuluy, gazevelX, gazevely, errorx, errory, pupilArea, gazerawx, gazerawy, blinks });
+        dataToSave.push({ time, gazex, gazey, stimulux, stimuluy, gazevelX, gazevely, errorx, errory, pupilArea, gazeRawx, gazeRawy, blinks });
       }
       await csvWriter.writeRecords(dataToSave);
     });
@@ -87,22 +90,22 @@ const octave = async (call, callback) => {
         const typeStudy = file.slice(file.indexOf('_') + 1, file.indexOf('.csv'))
         switch (typeStudy) {
           case 'AD':
-            idResultType = '2'
+            idResultType = 'oct2'
             break;
           case 'PD':
-            idResultType = '3'
+            idResultType = 'oct3'
             break;
           case 'FTD':
-            idResultType = '5'
+            idResultType = 'oct5'
             break;
           case 'MCI':
-            idResultType = '8'
+            idResultType = 'oct8'
             break;
           case 'P':
-            idResultType = '9'
+            idResultType = 'oct9'
             break;
           case 'EHM':
-            idResultType = '10'
+            idResultType = 'oct10'
             break;
         }
         return { idResultType, result }

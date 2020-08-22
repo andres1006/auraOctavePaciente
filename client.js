@@ -81,6 +81,9 @@ async function main() {
       }
         
       const data = { time, gazex, gazey, stimulux, stimuluy, gazevelX, gazevely, errorx, errory, pupilArea, gazerawx, gazerawy, blinks }
+
+      
+
       const objReturn = { nameSerie, data }
       return objReturn;
     });
