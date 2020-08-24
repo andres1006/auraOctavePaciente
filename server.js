@@ -11,6 +11,9 @@ const server = new grpc.Server();
 const octave = async (call, callback) => {
   try {
     const { idStudy } = call.request;
+    const diferenciales = [['5','8'],['2','8'],['2','5'],['3','9']];
+    const itsDiferencial = [false, false];
+    let diferencialToAnalyze = '00';
     let tests=[];
     let identifierStudyCatalog=[];
     console.log(call.request.series[0].tests[0].data.time[0]);
@@ -22,6 +25,14 @@ const octave = async (call, callback) => {
       identifierStudyCatalog.push(serie.identifierStudyCatalog);
     })
     console.log(tests.length);
+
+    diferenciales.forEach((diferencial, index) => {
+      if (diferencialToAnalyze === '00') {
+        itsDiferencial[0] = diferenciales.includes(diferencial[0]);
+        itsDiferencial[1] = diferenciales.includes(diferencial[1]);
+        diferencialToAnalyze = itsDiferencial[0] && itsDiferencial[1]? `${diferencial[0]}${diferencial[1]}` : '00';  
+      }
+    })
   
 
     let file = 0;
@@ -89,23 +100,35 @@ const octave = async (call, callback) => {
         const result = resultFile.split(",").join(" ")
         const typeStudy = file.slice(file.indexOf('_') + 1, file.indexOf('.csv'))
         switch (typeStudy) {
-          case 'AD':
+          case 'EA':
             idResultType = 'oct2'
             break;
-          case 'PD':
+          case 'EP':
             idResultType = 'oct3'
             break;
-          case 'FTD':
+          case 'DFT':
             idResultType = 'oct5'
             break;
-          case 'MCI':
+          case 'DCL':
             idResultType = 'oct8'
             break;
-          case 'P':
+          case 'PKS':
             idResultType = 'oct9'
             break;
           case 'EHM':
             idResultType = 'oct10'
+            break;
+          case '_diferencial_DFT_vs_DCL':
+            idResultType = 'oct58'
+            break;
+          case '_diferencial_EA_vs_DCL':
+            idResultType = 'oct28'
+            break;
+          case '_diferencial_EA_vs_DFT':
+            idResultType = 'oct25'
+            break;
+          case '_diferencial_EP_vs_PKS':
+            idResultType = 'oct39'
             break;
         }
         return { idResultType, result }
