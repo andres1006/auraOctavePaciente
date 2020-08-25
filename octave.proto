@@ -38,7 +38,7 @@ message Columns {
 }
 
 message OutputOctave {
-  string idStudy =1;
+  string idStudy = 1;
   repeated Result results = 2;
   global globalResult = 3;
 }
