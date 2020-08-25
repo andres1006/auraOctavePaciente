@@ -10,13 +10,13 @@ const server = new grpc.Server();
 
 const octave = async (call, callback) => {
   try {
-    const { idStudy } = call.request;
+    const { idStudy, idPatient } = call.request;
+    const series =  call.request.series;
     const diferenciales = [['5','8'],['2','8'],['2','5'],['3','9']];
     const itsDiferencial = [false, false];
     let diferencialToAnalyze = '00';
     let tests=[];
     let identifierStudyCatalog=[];
-    const series =  call.request.series;
     series.forEach(serie => {
       serie.tests.forEach(test =>{
         tests.push(test);
@@ -39,14 +39,14 @@ const octave = async (call, callback) => {
     tests.forEach(async (testInfo) => {
       file++;
       const { nameSerie, data } = testInfo;
-      const dir = `./patientfolder/${nameSerie}_v-2.3.2`;
+      const dir = `./${idPatient}/${nameSerie}_v-2.3.2`;
       console.log("nameSerie = ", nameSerie);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
 
       const csvWriter = createObjectCsvWriter({
-        path: `./patientfolder/${nameSerie}_v-2.3.2/${nameSerie}_v-2.3.2.csv`,
+        path: `./${idPatient}/${nameSerie}_v-2.3.2/${nameSerie}_v-2.3.2.csv`,
         header: [
           { id: 'time', title: 'Time(ms)' },
           { id: 'gazex', title: 'GazeX(deg)' },
@@ -88,15 +88,18 @@ const octave = async (call, callback) => {
     });
 
 
-    fs.writeFileSync('analyzer.sh', `analyzer('./patientfolder',[${identifierStudyCatalog}])`);
+    fs.writeFileSync('analyzer.sh', `analyzer('./${idPatient}',[${identifierStudyCatalog}])`);
 
     await exec('octave analyzer.sh');
 
-    const files = fs.readdirSync('./patientfolder');
+    const files = fs.readdirSync(`./${idPatient}`);
+
+    let globalResult;
+
     const results = files.map((file) => {
       if (file.search('Estudio') != -1) {
         let idResultType;
-        const resultFile = fs.readFileSync(`./patientfolder/${file}`, 'utf-8');
+        const resultFile = fs.readFileSync(`./${idPatient}/${file}`, 'utf-8');
         const result = resultFile.split(",").join(" ")
         const typeStudy = file.slice(file.indexOf('_') + 1, file.indexOf('.csv'))
         switch (typeStudy) {
@@ -133,12 +136,19 @@ const octave = async (call, callback) => {
         }
         return { idResultType, result }
       }
-    }).filter((element) => element !== undefined
-    );
 
-    //fs.rmdirSync('./patientfolder', { recursive: true });
+      if (file.search('GLOBAL') != -1) {
+        const globalFile = fs.readFileSync(`./${idPatient}/${file}`, 'utf-8').toString().split("\n");
+        globalResultNames = globalFile[0];
+        globalResults = globalFile[1];
+        globalResult = { globalResultNames, globalResults };
+      }
 
-    callback(null, { idStudy, results });
+    }).filter((element) => element !== undefined);
+
+    //fs.rmdirSync(`./${idPatient}`, { recursive: true });
+
+    callback(null, { idStudy, results, globalResult });
 
   } catch (error) {
     return callback({
