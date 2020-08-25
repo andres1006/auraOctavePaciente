@@ -34,12 +34,9 @@ const octave = async (call, callback) => {
 
     if (diferencialToAnalyze !== '00') identifierStudyCatalog.push(diferencialToAnalyze);
 
-    let file = 0;
     tests.forEach(async (testInfo) => {
-      file++;
       const { nameSerie, data } = testInfo;
       const dir = `./${idPatient}/${nameSerie}_v-2.3.2`;
-      console.log("nameSerie = ", nameSerie);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
@@ -148,8 +145,7 @@ const octave = async (call, callback) => {
 
     }).filter((element) => element !== undefined);
 
-    //fs.rmdirSync(`./${idPatient}`, { recursive: true });
-
+    fs.rmdirSync(`./${idPatient}`, { recursive: true });
     callback(null, { idStudy, results, globalResult });
 
   } catch (error) {
