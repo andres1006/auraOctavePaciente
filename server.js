@@ -16,7 +16,6 @@ const octave = async (call, callback) => {
     let diferencialToAnalyze = '00';
     let tests=[];
     let identifierStudyCatalog=[];
-    console.log(call.request.series[0].tests[0].data.time[0]);
     const series =  call.request.series;
     series.forEach(serie => {
       serie.tests.forEach(test =>{
@@ -24,13 +23,13 @@ const octave = async (call, callback) => {
       })
       identifierStudyCatalog.push(serie.identifierStudyCatalog);
     })
-    console.log(tests.length);
 
     diferenciales.forEach((diferencial, index) => {
       if (diferencialToAnalyze === '00') {
         itsDiferencial[0] = diferenciales.includes(diferencial[0]);
         itsDiferencial[1] = diferenciales.includes(diferencial[1]);
-        diferencialToAnalyze = itsDiferencial[0] && itsDiferencial[1]? `${diferencial[0]}${diferencial[1]}` : '00';  
+        diferencialToAnalyze = itsDiferencial[0] && itsDiferencial[1]? `${diferencial[0]}${diferencial[1]}` : '00';
+        identifierStudyCatalog.push(diferencialToAnalyze);
       }
     })
   
