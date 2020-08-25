@@ -26,12 +26,13 @@ const octave = async (call, callback) => {
 
     diferenciales.forEach((diferencial, index) => {
       if (diferencialToAnalyze === '00') {
-        itsDiferencial[0] = diferenciales.includes(diferencial[0]);
-        itsDiferencial[1] = diferenciales.includes(diferencial[1]);
+        itsDiferencial[0] = identifierStudyCatalog.includes(diferencial[0]);
+        itsDiferencial[1] = identifierStudyCatalog.includes(diferencial[1]);
         diferencialToAnalyze = itsDiferencial[0] && itsDiferencial[1]? `${diferencial[0]}${diferencial[1]}` : '00';
-        identifierStudyCatalog.push(diferencialToAnalyze);
       }
     })
+
+    if (diferencialToAnalyze !== '00') identifierStudyCatalog.push(diferencialToAnalyze);
   
 
     let file = 0;
