@@ -33,7 +33,6 @@ const octave = async (call, callback) => {
     })
 
     if (diferencialToAnalyze !== '00') identifierStudyCatalog.push(diferencialToAnalyze);
-  
 
     let file = 0;
     tests.forEach(async (testInfo) => {
@@ -64,9 +63,6 @@ const octave = async (call, callback) => {
         ]
       });
 
-
-      
-
       const dataToSave = [];
       for (let i = 0; i < data.time.length; i++) {
         const time = data.time[i];
@@ -87,7 +83,6 @@ const octave = async (call, callback) => {
       await csvWriter.writeRecords(dataToSave);
     });
 
-
     fs.writeFileSync('analyzer.sh', `analyzer('./patientfolder',[${identifierStudyCatalog}])`);
 
     await exec('octave analyzer.sh');
@@ -101,33 +96,39 @@ const octave = async (call, callback) => {
         const typeStudy = file.slice(file.indexOf('_') + 1, file.indexOf('.csv'))
         switch (typeStudy) {
           case 'EA':
+          case 'AD':
             idResultType = 'oct2'
             break;
           case 'EP':
+          case 'PD':
             idResultType = 'oct3'
             break;
           case 'DFT':
+          case 'FD':
+          case 'FTD':
             idResultType = 'oct5'
             break;
           case 'DCL':
+          case 'MCI':
             idResultType = 'oct8'
             break;
           case 'PKS':
+          case 'P':
             idResultType = 'oct9'
             break;
           case 'EHM':
             idResultType = 'oct10'
             break;
-          case '_diferencial_DFT_vs_DCL':
+          case 'Diferencial_FD_vs_MCI':
             idResultType = 'oct58'
             break;
-          case '_diferencial_EA_vs_DCL':
+          case 'Diferencial_AD_vs_MCI':
             idResultType = 'oct28'
             break;
-          case '_diferencial_EA_vs_DFT':
+          case 'Diferencial_AD_vs_FTD':
             idResultType = 'oct25'
             break;
-          case '_diferencial_EP_vs_PKS':
+          case 'Diferencial_EP_vs_PKS':
             idResultType = 'oct39'
             break;
         }
@@ -137,7 +138,6 @@ const octave = async (call, callback) => {
     );
 
     //fs.rmdirSync('./patientfolder', { recursive: true });
-
     callback(null, { idStudy, results });
 
   } catch (error) {
