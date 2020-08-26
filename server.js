@@ -12,7 +12,7 @@ const octave = async (call, callback) => {
   try {
     const { idStudy, idPatient } = call.request;
     const series =  call.request.series;
-    const diferenciales = [['5','8'],['2','8'],['2','5'],['3','9']];
+    const diferenciales = [['5','9'],['2','9'],['2','5'],['3','10']];
     const itsDiferencial = [false, false];
     let diferencialToAnalyze = '00';
     let tests=[];
@@ -111,26 +111,27 @@ const octave = async (call, callback) => {
             break;
           case 'DCL':
           case 'MCI':
-            idResultType = 'oct8'
+            idResultType = 'oct9'
             break;
           case 'PKS':
           case 'P':
-            idResultType = 'oct9'
-            break;
-          case 'EHM':
             idResultType = 'oct10'
             break;
+          case 'EHM':
+          case 'MHE':
+            idResultType = 'oct8'
+            break;
           case 'Diferencial_FD_vs_MCI':
-            idResultType = 'oct58'
+            idResultType = 'oct59'
             break;
           case 'Diferencial_AD_vs_MCI':
-            idResultType = 'oct28'
+            idResultType = 'oct29'
             break;
           case 'Diferencial_AD_vs_FTD':
             idResultType = 'oct25'
             break;
-          case 'Diferencial_EP_vs_PKS':
-            idResultType = 'oct39'
+          case 'Diferencial_PD_vs_PKS':
+            idResultType = 'oct310'
             break;
         }
         return { idResultType, result }
