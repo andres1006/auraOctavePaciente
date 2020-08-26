@@ -121,7 +121,7 @@ const octave = async (call, callback) => {
           case 'MHE':
             idResultType = 'oct8'
             break;
-          case 'Diferencial_FD_vs_MCI':
+          case 'Diferencial_FTD_vs_MCI':
             idResultType = 'oct59'
             break;
           case 'Diferencial_AD_vs_MCI':
