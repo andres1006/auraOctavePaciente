@@ -1,10 +1,11 @@
 {
-  "name": "clasificador-parkinsonismos",
+  "name": "octave-microservice",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "gypfile": true,
   "scripts": {
+    "dev": "nodemon -e js,proto --exec 'clear && node server.js'",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,8 +13,12 @@
   "license": "ISC",
   "dependencies": {
     "@grpc/proto-loader": "^0.5.3",
-    "dotenv": "^8.2.0",
-    "grpc": "^1.24.2",
-    "node-addon-api": "^0.6.3"
+    "child-process-async": "^1.0.1",
+    "csv-parser": "^2.3.3",
+    "csv-writer": "^1.6.0",
+    "grpc": "^1.24.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }

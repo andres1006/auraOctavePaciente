@@ -1,5 +1,4 @@
-Resolution,1920,1080,Distance,57,Width,47.8,Subject,ACT-05208452X,Test,TASVV-04202018-133137,Calibration,CC9-04202018-133038,Analizer, 1.0.0
-Time(ms),GazeX(deg),GazeY(deg),StimulusX(deg),StimulusY(deg),GazeVelX(deg/s),GazeVelY(deg/s),ErrorX(deg),ErrorY(deg),PupilArea(px^2),GazeRawX(deg),GazeRawY(deg),Blinks
+Time,GazeX,GazeY,StimulusX,StimulusY,GazeVelX,GazeVelY,ErrorX,ErrorY,PupilArea,GazeRawX,GazeRawY,Blinks
 0,-0.208683,0.453424,0,0,0,0,-0.208683,0.453424,13221.2,-0.210422,0.438289,0
 6.848,-0.208683,0.453424,0,0,0,0,-0.208683,0.453424,13221.2,-0.206644,0.677128,0
 17.738,-0.204387,0.491355,0,0,0.394542,3.48311,-0.204387,0.491355,13221.2,-0.119071,0.636033,0
