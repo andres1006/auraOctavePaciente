@@ -7,7 +7,7 @@ const packageDef = protoLoader.loadSync("octave.proto");
 const octavePackage = grpc.loadPackageDefinition(packageDef).octavePackage;
 
 const client = new octavePackage.Octave(
-  "localhost:50051",
+  "localhost:15000",
   grpc.credentials.createInsecure()
 );
 
