@@ -1,5 +1,4 @@
-Resolution,1920,1080,Distance,57,Width,47.8,Subject,ACT-05208452X,Test,TFIX-04202018-132528,Calibration,CC9-04202018-132505,Oscann, 4.0.12,libTracker, 1.0.9,crtime, 12112018-165113
-Time(ms),GazeX(deg),GazeY(deg),StimulusX(deg),StimulusY(deg),GazeVelX(deg/s),GazeVelY(deg/s),ErrorX(deg),ErrorY(deg),PupilArea(px^2),GazeRawX(deg),GazeRawY(deg),Blinks
+Time,GazeX,GazeY,StimulusX,StimulusY,GazeVelX,GazeVelY,ErrorX,ErrorY,PupilArea,GazeRawX,GazeRawY,Blinks
 0.0,-0.165982,0.10938,0.0,0.0,0.0,0.0,-0.165982,0.10938,16342.9,-0.167643,0.094305,0.0
 12.17,-0.165982,0.10938,0.0,0.0,0.0,0.0,-0.165982,0.10938,16342.9,-0.183307,0.153645,0.0
 20.115,-0.163067,0.137361,0.0,0.0,0.366908,3.52179,-0.163067,0.137361,16342.9,-0.108735,0.158173,0.0
