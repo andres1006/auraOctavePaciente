@@ -87,8 +87,8 @@ async function main() {
       const objReturn = { nameSerie, data }
       return objReturn;
     });
-    const studies = [2, 5];
-    client.octave({ idStudy: "id_mongo", studies, series: [{ identifierStudyCatalog: '3', tests }] }, callback);
+    
+    client.octave({ idStudy: "id_mongo", idPatient: "pacienteA1", series: [{ identifierStudyCatalog: '2', tests }] }, callback);
   });
 }
 
