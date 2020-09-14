@@ -1,0 +1,9 @@
+{
+  "apps": [
+      {
+          "name": "aura-octave",
+          "script": "npm",
+          "args" : "start"
+      }
+  ]
+}
