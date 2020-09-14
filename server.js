@@ -6,7 +6,10 @@ const { exec } = require('child-process-async');
 
 const packageDef = protoLoader.loadSync("octave.proto");
 const octavePackage = grpc.loadPackageDefinition(packageDef).octavePackage;
-const server = new grpc.Server();
+const server = new grpc.Server({
+  'grpc.max_receive_message_length': 1024 * 1024 * 100,
+  'grpc.max_send_message_length': 1024 * 1024 * 100,
+});
 
 const octave = async (call, callback) => {
   try {
