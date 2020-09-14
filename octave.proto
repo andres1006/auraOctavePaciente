@@ -35,6 +35,7 @@ message Columns {
   repeated double gazeRawx = 11;
   repeated double gazeRawy = 12;
   repeated double blinks = 13;
+  repeated int32 valid = 14;
 }
 
 message OutputOctave {
