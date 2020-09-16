@@ -22,20 +22,20 @@ message Test {
 }
 
 message Columns {
-  repeated double time = 1;
-  repeated double gazex = 2;
-  repeated double gazey = 3;
-  repeated double stimulux = 4;
-  repeated double stimuluy = 5;
-  repeated double gazevelX = 6;
-  repeated double gazevely = 7;
-  repeated double errorx = 8;
-  repeated double errory = 9;
-  repeated double pupilArea = 10;
-  repeated double gazeRawx = 11;
-  repeated double gazeRawy = 12;
-  repeated double blinks = 13;
-  repeated int32 valid = 14;
+  repeated string time = 1;
+  repeated string gazex = 2;
+  repeated string gazey = 3;
+  repeated string stimulux = 4;
+  repeated string stimuluy = 5;
+  repeated string gazevelX = 6;
+  repeated string gazevely = 7;
+  repeated string errorx = 8;
+  repeated string errory = 9;
+  repeated string pupilArea = 10;
+  repeated string gazeRawx = 11;
+  repeated string gazeRawy = 12;
+  repeated string blinks = 13;
+  repeated string valid = 14;
 }
 
 message OutputOctave {
