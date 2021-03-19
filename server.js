@@ -15,7 +15,7 @@ const octave = async (call, callback) => {
   try {
     const { idStudy, idPatient } = call.request;
     const series =  call.request.series;
-    const diferenciales = [['5','9'],['2','9'],['2','5'],['3','10']];
+    const diferenciales = ['59','29','25','310'];
     const itsDiferencial = [false, false];
     let diferencialToAnalyze = '00';
     let tests=[];
@@ -27,15 +27,19 @@ const octave = async (call, callback) => {
       identifierStudyCatalog.push(serie.identifierStudyCatalog);
     })
 
-    diferenciales.forEach((diferencial, index) => {
-      if (diferencialToAnalyze === '00') {
-        itsDiferencial[0] = identifierStudyCatalog.includes(diferencial[0]);
-        itsDiferencial[1] = identifierStudyCatalog.includes(diferencial[1]);
-        diferencialToAnalyze = itsDiferencial[0] && itsDiferencial[1]? `${diferencial[0]}${diferencial[1]}` : '00';
-      }
-    })
+    if (diferenciales.includes(identifierStudyCatalog[0])) diferencialToAnalyze = identifierStudyCatalog[0]
 
-    if (diferencialToAnalyze !== '00') identifierStudyCatalog.push(diferencialToAnalyze);
+    if (diferencialToAnalyze !== '00') {
+      const ids = identifierStudyCatalog[0].split('');
+
+      if(ids.length == 2){
+        identifierStudyCatalog.unshift(ids[0], ids[1]);
+      } else if (ids.length == 3) {
+        identifierStudyCatalog.unshift(ids[0], `${ids[1]}${ids[2]}`);
+      }
+    }
+
+    console.log(identifierStudyCatalog);
 
     tests.forEach(async (testInfo) => {
       const { nameSerie, data } = testInfo;
