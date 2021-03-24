@@ -16,7 +16,6 @@ const octave = async (call, callback) => {
     const { idStudy, idPatient } = call.request;
     const series =  call.request.series;
     const diferenciales = ['59','29','25','310'];
-    const itsDiferencial = [false, false];
     let diferencialToAnalyze = '00';
     let tests=[];
     let identifierStudyCatalog=[];
@@ -38,8 +37,6 @@ const octave = async (call, callback) => {
         identifierStudyCatalog.unshift(ids[0], `${ids[1]}${ids[2]}`);
       }
     }
-
-    console.log(identifierStudyCatalog);
 
     tests.forEach(async (testInfo) => {
       const { nameSerie, data } = testInfo;
